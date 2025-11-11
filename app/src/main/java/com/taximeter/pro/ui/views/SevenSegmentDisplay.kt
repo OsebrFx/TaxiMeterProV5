@@ -33,32 +33,40 @@ class SevenSegmentDisplay @JvmOverloads constructor(
 
     // Couleurs LED ultra réalistes
     private val activeColor = Color.parseColor("#FF0000")
-    private val inactiveColor = Color.parseColor("#220000")
-    private val glowColor = Color.parseColor("#FF4444")
+    private val inactiveColor = Color.parseColor("#1A0000")
+    private val glowColor = Color.parseColor("#FF3333")
 
-    // Paints pour les segments
+    // Paints pour les segments - Qualité 8K optimisée
     private val activePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = activeColor
         style = Paint.Style.FILL
-        maskFilter = BlurMaskFilter(12f, BlurMaskFilter.Blur.NORMAL)
+        maskFilter = BlurMaskFilter(18f, BlurMaskFilter.Blur.NORMAL)
+        isAntiAlias = true
+        isDither = true
+        isFilterBitmap = true
     }
 
     private val inactivePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = inactiveColor
         style = Paint.Style.FILL
+        isAntiAlias = true
     }
 
     private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = glowColor
         style = Paint.Style.FILL
-        maskFilter = BlurMaskFilter(24f, BlurMaskFilter.Blur.NORMAL)
+        maskFilter = BlurMaskFilter(32f, BlurMaskFilter.Blur.NORMAL)
+        isAntiAlias = true
+        isDither = true
     }
 
     private val unitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = activeColor
-        textSize = 40f
+        textSize = 50f
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
-        maskFilter = BlurMaskFilter(10f, BlurMaskFilter.Blur.NORMAL)
+        maskFilter = BlurMaskFilter(14f, BlurMaskFilter.Blur.NORMAL)
+        isAntiAlias = true
+        textAlign = Paint.Align.LEFT
     }
 
     init {
@@ -136,38 +144,43 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     }
 
     private fun drawMoney(canvas: Canvas) {
-        // Format: 00.00 DH
-        val formatted = String.format(Locale.US, "%05.2f", currentValue)
+        // Format: XX.XX DH
+        val formatted = String.format(Locale.US, "%.2f", currentValue)
         val parts = formatted.split(".")
-        val intPart = parts[0].padStart(2, '0')
-        val decPart = if (parts.size > 1) parts[1] else "00"
+        val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
+        val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
-        val availableWidth = width - paddingLeft - paddingRight - 120f
-        val digitWidth = availableWidth / 5f
+        // Calculer les dimensions
+        val totalWidth = width - paddingLeft - paddingRight.toFloat()
+        val digitWidth = totalWidth / 6.5f  // 4 digits + point + espace pour DH
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
         var xOffset = paddingLeft.toFloat()
         val yOffset = paddingTop.toFloat()
 
-        // Dessiner partie entière
-        intPart.forEach { char ->
-            drawDigit(canvas, char.toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+        // Dessiner partie entière (2 digits)
+        for (i in 0 until 2) {
+            val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
+            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
+            xOffset += digitWidth + 8f
         }
 
         // Point décimal
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 16f
+        xOffset += 20f
 
-        // Partie décimale
-        decPart.forEach { char ->
-            drawDigit(canvas, char.toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+        // Partie décimale (2 digits)
+        for (i in 0 until 2) {
+            val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
+            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
+            xOffset += digitWidth + 8f
         }
 
-        // Unité DH
-        xOffset += 20f
-        canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.6f, unitPaint)
+        // Unité DH avec taille adaptative
+        xOffset += 25f
+        val dhTextSize = digitHeight * 0.35f
+        unitPaint.textSize = dhTextSize
+        canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.55f, unitPaint)
     }
 
     private fun drawTime(canvas: Canvas) {
@@ -177,77 +190,80 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val seconds = totalSeconds % 60
         val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
 
-        val availableWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = availableWidth / 4.5f
+        val totalWidth = width - paddingLeft - paddingRight.toFloat()
+        val digitWidth = totalWidth / 4.8f
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
         var xOffset = paddingLeft.toFloat()
         val yOffset = paddingTop.toFloat()
 
-        // Minutes
+        // Minutes (2 digits)
         for (i in 0..1) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+            xOffset += digitWidth + 8f
         }
 
-        // Deux points
+        // Deux points ":"
         drawColon(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 16f
+        xOffset += 20f
 
-        // Secondes
+        // Secondes (2 digits)
         for (i in 2..3) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+            xOffset += digitWidth + 8f
         }
     }
 
     private fun drawDistance(canvas: Canvas) {
-        // Format: 00.00
-        val formatted = String.format(Locale.US, "%05.2f", currentValue)
+        // Format: XX.XX
+        val formatted = String.format(Locale.US, "%.2f", currentValue)
         val parts = formatted.split(".")
-        val intPart = parts[0].padStart(2, '0')
-        val decPart = if (parts.size > 1) parts[1] else "00"
+        val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
+        val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
-        val availableWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = availableWidth / 5f
+        val totalWidth = width - paddingLeft - paddingRight.toFloat()
+        val digitWidth = totalWidth / 5f  // 4 digits + point
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
         var xOffset = paddingLeft.toFloat()
         val yOffset = paddingTop.toFloat()
 
-        // Partie entière
-        intPart.forEach { char ->
-            drawDigit(canvas, char.toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+        // Partie entière (2 digits)
+        for (i in 0 until 2) {
+            val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
+            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
+            xOffset += digitWidth + 8f
         }
 
         // Point décimal
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 16f
+        xOffset += 20f
 
-        // Partie décimale
-        decPart.forEach { char ->
-            drawDigit(canvas, char.toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 6f
+        // Partie décimale (2 digits)
+        for (i in 0 until 2) {
+            val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
+            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
+            xOffset += digitWidth + 8f
         }
     }
 
     private fun drawDigit(canvas: Canvas, digit: Int, x: Float, y: Float, width: Float, height: Float) {
         val segments = getSegmentsForDigit(digit)
 
-        val segmentWidth = width * 0.75f
-        val segmentHeight = height * 0.05f
-        val verticalWidth = height * 0.05f
-        val verticalHeight = height * 0.42f
+        // Augmentation de la taille des segments pour meilleure visibilité
+        val segmentWidth = width * 0.8f
+        val segmentHeight = height * 0.08f
+        val verticalWidth = height * 0.08f
+        val verticalHeight = height * 0.4f
 
         val positions = mapOf(
-            'a' to SegmentPos(x + width * 0.12f, y, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + width * 0.8f, y + height * 0.05f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + width * 0.8f, y + height * 0.53f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + width * 0.12f, y + height * 0.95f, segmentWidth, segmentHeight),
-            'e' to SegmentPos(x + width * 0.05f, y + height * 0.53f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + width * 0.05f, y + height * 0.05f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + width * 0.12f, y + height * 0.475f, segmentWidth, segmentHeight)
+            'a' to SegmentPos(x + width * 0.1f, y + height * 0.02f, segmentWidth, segmentHeight),
+            'b' to SegmentPos(x + width * 0.82f, y + height * 0.08f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + width * 0.82f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'd' to SegmentPos(x + width * 0.1f, y + height * 0.9f, segmentWidth, segmentHeight),
+            'e' to SegmentPos(x + width * 0.02f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + width * 0.02f, y + height * 0.08f, verticalWidth, verticalHeight),
+            'g' to SegmentPos(x + width * 0.1f, y + height * 0.46f, segmentWidth, segmentHeight)
         )
 
         positions.forEach { (seg, pos) ->
@@ -295,20 +311,25 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     }
 
     private fun drawDecimalPoint(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.05f
-        val centerY = y + height * 0.9f
-        canvas.drawCircle(x, centerY, radius * 1.5f, glowPaint)
+        val radius = height * 0.07f
+        val centerY = y + height * 0.88f
+        // Glow externe
+        canvas.drawCircle(x, centerY, radius * 2.2f, glowPaint)
+        // Point principal
         canvas.drawCircle(x, centerY, radius, activePaint)
     }
 
     private fun drawColon(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.05f
+        val radius = height * 0.07f
         val upperY = y + height * 0.35f
         val lowerY = y + height * 0.65f
 
-        canvas.drawCircle(x, upperY, radius * 1.5f, glowPaint)
+        // Point supérieur
+        canvas.drawCircle(x, upperY, radius * 2.2f, glowPaint)
         canvas.drawCircle(x, upperY, radius, activePaint)
-        canvas.drawCircle(x, lowerY, radius * 1.5f, glowPaint)
+
+        // Point inférieur
+        canvas.drawCircle(x, lowerY, radius * 2.2f, glowPaint)
         canvas.drawCircle(x, lowerY, radius, activePaint)
     }
 
