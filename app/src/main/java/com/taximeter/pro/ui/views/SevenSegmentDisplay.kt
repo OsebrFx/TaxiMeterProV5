@@ -274,20 +274,24 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     private fun drawDigit(canvas: Canvas, digit: Int, x: Float, y: Float, width: Float, height: Float) {
         val segments = getSegmentsForDigit(digit)
 
-        // Segments 8K ultra nets - épaisseur optimale pour clarté maximale
-        val segmentWidth = width * 0.82f
-        val segmentHeight = height * 0.10f  // Plus épais pour meilleure visibilité
-        val verticalWidth = height * 0.10f   // Plus épais
+        // SEGMENTS COMPACTS - ne dépassent JAMAIS l'espace alloué
+        val segmentWidth = width * 0.65f  // RÉDUIT de 82% à 65%
+        val segmentHeight = height * 0.10f
+        val verticalWidth = height * 0.10f
         val verticalHeight = height * 0.38f
 
+        // Centrer les segments dans l'espace alloué
+        val marginLeft = width * 0.15f  // Marge gauche pour centrage
+        val marginRight = width * 0.20f  // Marge droite
+
         val positions = mapOf(
-            'a' to SegmentPos(x + width * 0.09f, y + height * 0.02f, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + width * 0.82f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + width * 0.82f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + width * 0.09f, y + height * 0.88f, segmentWidth, segmentHeight),
-            'e' to SegmentPos(x + width * 0.02f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + width * 0.02f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + width * 0.09f, y + height * 0.46f, segmentWidth, segmentHeight)
+            'a' to SegmentPos(x + marginLeft, y + height * 0.02f, segmentWidth, segmentHeight),
+            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
+            'd' to SegmentPos(x + marginLeft, y + height * 0.88f, segmentWidth, segmentHeight),
+            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'g' to SegmentPos(x + marginLeft, y + height * 0.46f, segmentWidth, segmentHeight)
         )
 
         positions.forEach { (seg, pos) ->
@@ -380,23 +384,24 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         }
     }
 
-    // Dessiner la lettre "D" en style 7-segments
+    // Dessiner la lettre "D" en style 7-segments - COMPACT
     private fun drawLetterD(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
-        // D = segments a, b, c, d, e, f (comme 0 mais en plus étroit)
+        // D = segments a, b, c, d, e, f (comme 0)
         val segments = setOf('a', 'b', 'c', 'd', 'e', 'f')
 
-        val segmentWidth = width * 0.75f
+        val segmentWidth = width * 0.65f  // COMPACT comme les chiffres
         val segmentHeight = height * 0.10f
         val verticalWidth = height * 0.10f
         val verticalHeight = height * 0.38f
+        val marginLeft = width * 0.15f
 
         val positions = mapOf(
-            'a' to SegmentPos(x + width * 0.12f, y + height * 0.02f, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + width * 0.8f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + width * 0.8f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + width * 0.12f, y + height * 0.88f, segmentWidth, segmentHeight),
-            'e' to SegmentPos(x + width * 0.05f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + width * 0.05f, y + height * 0.10f, verticalWidth, verticalHeight)
+            'a' to SegmentPos(x + marginLeft, y + height * 0.02f, segmentWidth, segmentHeight),
+            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
+            'd' to SegmentPos(x + marginLeft, y + height * 0.88f, segmentWidth, segmentHeight),
+            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight)
         )
 
         positions.forEach { (seg, pos) ->
@@ -404,22 +409,23 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         }
     }
 
-    // Dessiner la lettre "H" en style 7-segments
+    // Dessiner la lettre "H" en style 7-segments - COMPACT
     private fun drawLetterH(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
         // H = segments b, c, e, f, g
         val segments = setOf('b', 'c', 'e', 'f', 'g')
 
-        val segmentWidth = width * 0.75f
+        val segmentWidth = width * 0.65f  // COMPACT comme les chiffres
         val segmentHeight = height * 0.10f
         val verticalWidth = height * 0.10f
         val verticalHeight = height * 0.38f
+        val marginLeft = width * 0.15f
 
         val positions = mapOf(
-            'b' to SegmentPos(x + width * 0.8f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + width * 0.8f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'e' to SegmentPos(x + width * 0.05f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + width * 0.05f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + width * 0.12f, y + height * 0.46f, segmentWidth, segmentHeight)
+            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
+            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'g' to SegmentPos(x + marginLeft, y + height * 0.46f, segmentWidth, segmentHeight)
         )
 
         positions.forEach { (seg, pos) ->
