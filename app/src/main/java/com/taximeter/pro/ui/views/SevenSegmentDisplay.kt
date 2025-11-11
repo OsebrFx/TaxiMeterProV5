@@ -165,43 +165,43 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
-        // Calculer les dimensions - espacement professionnel comme un vrai compteur
+        // Calculer les dimensions - chaque chiffre bien séparé
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 9.5f  // Plus d'espace pour chaque chiffre
+        val digitWidth = totalWidth / 12f  // Chiffres plus petits = plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.2f
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.5f
         val yOffset = paddingTop.toFloat()
 
-        // Dessiner partie entière (2 digits) - bien espacés
+        // Dessiner partie entière (2 digits) - TRÈS bien espacés
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 20f  // Espacement généreux
+            xOffset += digitWidth + 35f  // GRAND espacement entre chiffres
         }
 
-        // Point décimal - très bien séparé
-        xOffset += 15f
+        // Point décimal - TRÈS bien séparé
+        xOffset += 20f
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 40f  // Grand espace après le point
+        xOffset += 50f  // ÉNORME espace après le point
 
-        // Partie décimale (2 digits) - bien espacés
+        // Partie décimale (2 digits) - TRÈS bien espacés
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 20f  // Même espacement
+            xOffset += digitWidth + 35f  // GRAND espacement entre chiffres
         }
 
-        // Grand espace avant DH
-        xOffset += 30f
+        // ÉNORME espace avant DH
+        xOffset += 40f
 
-        // Dessiner "DH" en petit (40% de la taille des chiffres)
-        val dhSize = digitWidth * 0.4f
-        val dhHeight = digitHeight * 0.5f
-        val dhYOffset = yOffset + digitHeight * 0.25f  // Centré verticalement
+        // Dessiner "DH" en petit (30% de la taille des chiffres)
+        val dhSize = digitWidth * 0.35f
+        val dhHeight = digitHeight * 0.45f
+        val dhYOffset = yOffset + digitHeight * 0.3f  // Centré verticalement
 
         drawLetterD(canvas, xOffset, dhYOffset, dhSize, dhHeight)
-        xOffset += dhSize + 6f
+        xOffset += dhSize + 5f
         drawLetterH(canvas, xOffset, dhYOffset, dhSize, dhHeight)
     }
 
@@ -213,27 +213,27 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 6.5f  // Plus d'espace
+        val digitWidth = totalWidth / 8f  // Chiffres plus petits = plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.3f
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.5f
         val yOffset = paddingTop.toFloat()
 
-        // Minutes (2 digits) - bien espacés
+        // Minutes (2 digits) - TRÈS bien espacés
         for (i in 0..1) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 22f  // Espacement généreux
+            xOffset += digitWidth + 30f  // GRAND espacement
         }
 
-        // Deux points ":" - très bien séparé
-        xOffset += 12f
+        // Deux points ":" - TRÈS bien séparé
+        xOffset += 18f
         drawColon(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 38f
+        xOffset += 45f
 
-        // Secondes (2 digits) - bien espacés
+        // Secondes (2 digits) - TRÈS bien espacés
         for (i in 2..3) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 22f
+            xOffset += digitWidth + 30f
         }
     }
 
@@ -245,29 +245,29 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 6.5f  // Plus d'espace
+        val digitWidth = totalWidth / 8f  // Chiffres plus petits = plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.3f
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.5f
         val yOffset = paddingTop.toFloat()
 
-        // Partie entière (2 digits) - bien espacés
+        // Partie entière (2 digits) - TRÈS bien espacés
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 22f  // Espacement généreux
+            xOffset += digitWidth + 30f  // GRAND espacement
         }
 
-        // Point décimal - très bien séparé
-        xOffset += 12f
+        // Point décimal - TRÈS bien séparé
+        xOffset += 18f
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 38f
+        xOffset += 45f
 
-        // Partie décimale (2 digits) - bien espacés
+        // Partie décimale (2 digits) - TRÈS bien espacés
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 22f
+            xOffset += digitWidth + 30f
         }
     }
 
