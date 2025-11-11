@@ -59,10 +59,21 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setupSevenSegmentDisplay() {
         realisticSevenSegment = binding.realisticSevenSegment
-        realisticSevenSegment.setValue(2.5, animate = false)
+        // Ensure the view is visible and properly initialized
+        realisticSevenSegment.visibility = View.VISIBLE
+        realisticSevenSegment.post {
+            realisticSevenSegment.setValue(2.5, animate = false)
+        }
     }
 
     private fun startEntryAnimations() {
+        // Ensure all elements are visible before animating
+        binding.header.visibility = View.VISIBLE
+        binding.cardFare.visibility = View.VISIBLE
+        binding.containerTimeDistance.visibility = View.VISIBLE
+        binding.cardStatus.visibility = View.VISIBLE
+        binding.containerButtons.visibility = View.VISIBLE
+
         // Animation header avec bounce
         binding.header.apply {
             alpha = 0f
