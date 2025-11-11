@@ -314,8 +314,17 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.btnStart.setOnClickListener {
             animateButtonPress(it) {
                 if (viewModel.isRunning.value == true) {
+                    // PAUSE - Arrêter le compteur
                     viewModel.pauseTrip()
                     stopLocationService()
+
+                    // Afficher notification PAUSE avec tarif et infos
+                    NotificationHelper.showPauseNotification(
+                        requireContext(),
+                        viewModel.fare.value ?: 2.5,
+                        viewModel.distance.value ?: 0.0,
+                        viewModel.timeInSeconds.value ?: 0
+                    )
                 } else {
                     if (hasLocationPermissions()) {
                         viewModel.startTrip()

@@ -10,6 +10,40 @@ object NotificationHelper {
 
     private const val CHANNEL_ID = "TaxiMeterChannel"
     private const val TRIP_END_NOTIFICATION_ID = 2
+    private const val PAUSE_NOTIFICATION_ID = 3
+
+    fun showPauseNotification(
+        context: Context,
+        fare: Double,
+        distance: Double,
+        timeInSeconds: Int
+    ) {
+        createNotificationChannel(context)
+
+        val minutes = timeInSeconds / 60
+        val seconds = timeInSeconds % 60
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_taxi)
+            .setContentTitle("⏸️ PAUSE - Course en pause")
+            .setContentText("Tarif actuel: %.2f DH".format(fare))
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("""
+                    ⏸️ PAUSE
+
+                    💰 Tarif actuel: %.2f DH
+                    📍 Distance: %.2f km
+                    ⏱️ Durée: %d:%02d
+
+                    Appuyez sur DÉMARRER pour continuer
+                """.trimIndent().format(fare, distance, minutes, seconds)))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+        notificationManager.notify(PAUSE_NOTIFICATION_ID, notification)
+    }
 
     fun showTripEndNotification(
         context: Context,
