@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Ombre portée externe profonde -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#40000000" />
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+
+    <!-- Cadre métallique externe sombre -->
+    <item android:top="2dp" android:bottom="2dp" android:left="2dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#1a1a1a"
+                android:centerColor="#0d0d0d"
+                android:endColor="#1a1a1a"
+                android:type="linear" />
+            <corners android:radius="16dp" />
+            <stroke android:width="2dp" android:color="#2a2a2a" />
+        </shape>
+    </item>
+
+    <!-- Bordure métallique intermédiaire biseautée -->
+    <item android:top="6dp" android:bottom="6dp" android:left="6dp" android:right="6dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#2a2a2a"
+                android:centerColor="#1a1a1a"
+                android:endColor="#0d0d0d"
+                android:type="linear" />
+            <corners android:radius="14dp" />
+            <stroke android:width="1dp" android:color="#333333" />
+        </shape>
+    </item>
+
+    <!-- Cadre interne noir profond -->
+    <item android:top="10dp" android:bottom="10dp" android:left="10dp" android:right="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0a0a0a" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- Écran LCD noir absolu avec gradient subtil -->
+    <item android:top="14dp" android:bottom="14dp" android:left="14dp" android:right="14dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#000000"
+                android:centerColor="#030303"
+                android:endColor="#000000"
+                android:type="linear" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Reflet brillant supérieur subtil -->
+    <item
+        android:top="14dp"
+        android:bottom="60dp"
+        android:left="14dp"
+        android:right="14dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#12FFFFFF"
+                android:centerColor="#06FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Effet de profondeur inférieur -->
+    <item
+        android:top="120dp"
+        android:bottom="14dp"
+        android:left="14dp"
+        android:right="14dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#00000000"
+                android:endColor="#15000000"
+                android:type="linear" />
+            <corners
+                android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp" />
+        </shape>
+    </item>
+
+</layer-list>

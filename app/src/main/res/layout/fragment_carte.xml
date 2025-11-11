@@ -51,11 +51,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:letterSpacing="0.15"
-                android:shadowColor="#40000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="3" />
+                android:letterSpacing="0.15" />
 
             <ImageView
                 android:layout_width="40dp"
@@ -80,97 +76,80 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Card GPS Status ultra réaliste -->
-    <androidx.cardview.widget.CardView
+    <!-- Card GPS Status Ultra Réaliste 8K -->
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        app:cardBackgroundColor="#00000000"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <FrameLayout
+        <!-- Background ultra réaliste -->
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_display_ultra_realistic"
+            android:elevation="24dp" />
 
-            <!-- Background 7-segment -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_display_7segment" />
+        <!-- Contenu -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="28dp"
+            android:gravity="center">
 
-            <!-- Grille de pixels éteints -->
-
-            <!-- Contenu -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="14dp"
-                android:alpha="0.3"
-                android:background="#05FF0000" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/position_temps_reel"
+                android:textColor="#FFD700"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.25"
+                android:shadowColor="#FFD700"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="12" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="28dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
                 android:gravity="center">
+
+                <!-- LED GPS Active Ultra Réaliste -->
+                <FrameLayout
+                    android:layout_width="32dp"
+                    android:layout_height="32dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/led_indicator_green" />
+
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/position_temps_reel"
-                    android:textColor="#FFD700"
-                    android:textSize="18sp"
+                    android:text="@string/gps_actif"
+                    android:textColor="#22FF22"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.2"
-                    android:shadowColor="#FFD700"
+                    android:fontFamily="monospace"
+                    android:layout_marginStart="16dp"
+                    android:shadowColor="#22FF22"
                     android:shadowDx="0"
                     android:shadowDy="0"
-                    android:shadowRadius="10" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center">
-
-                    <!-- LED GPS Active ultra réaliste -->
-                    <FrameLayout
-                        android:layout_width="32dp"
-                        android:layout_height="32dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/led_indicator_green" />
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/gps_actif"
-                        android:textColor="#22FF22"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:fontFamily="monospace"
-                        android:layout_marginStart="16dp"
-                        android:shadowColor="#22FF22"
-                        android:shadowDx="0"
-                        android:shadowDy="0"
-                        android:shadowRadius="10" />
-
-                </LinearLayout>
+                    android:shadowRadius="12" />
 
             </LinearLayout>
 
-        </FrameLayout>
+        </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

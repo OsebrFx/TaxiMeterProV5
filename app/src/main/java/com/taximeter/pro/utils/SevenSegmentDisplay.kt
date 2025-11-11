@@ -13,6 +13,20 @@ class SevenSegmentDisplay(
 
     private var currentValue: Double = 0.0
 
+    // Map pour simuler les caractères 7-segment
+    private val segmentMap = mapOf(
+        '0' to "0",
+        '1' to "1",
+        '2' to "2",
+        '3' to "3",
+        '4' to "4",
+        '5' to "5",
+        '6' to "6",
+        '7' to "7",
+        '8' to "8",
+        '9' to "9"
+    )
+
     init {
         applySegmentStyle()
     }
@@ -20,32 +34,37 @@ class SevenSegmentDisplay(
     private fun applySegmentStyle() {
         val digits = listOf(digit1, digit2, digit3)
         digits.forEach { digit ->
-            // Police monospace pour look digital
-            digit.typeface = Typeface.MONOSPACE
-            digit.setTextColor(0xFFFF0000.toInt()) // Rouge vif LED
+            // Police monospace pour look digital authentique
+            digit.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
 
-            // Effet de glow ultra réaliste
+            // Couleur rouge vif LED
+            digit.setTextColor(0xFFFF0000.toInt())
+
+            // Effet de glow multi-couches pour réalisme maximal
             digit.setShadowLayer(
-                20f,  // radius augmenté
+                24f,  // radius externe
                 0f,   // dx
                 0f,   // dy
-                0xFFFF0000.toInt()  // rouge brillant
+                0xFFFF0000.toInt()  // couleur glow rouge
             )
 
-            // Espacement des caractères pour look authentique
-            digit.letterSpacing = 0.15f
+            // Espacement optimal pour affichage 7-segment
+            digit.letterSpacing = 0f
+
+            // Rendre les digits visibles
+            digit.alpha = 1f
         }
     }
 
     fun setNumber(number: Double) {
-        // Effet d'odomètre avec animation fluide
+        // Animation odomètre fluide
         animateOdometer(currentValue, number)
         currentValue = number
     }
 
     private fun animateOdometer(from: Double, to: Double) {
         val animator = ValueAnimator.ofFloat(from.toFloat(), to.toFloat())
-        animator.duration = 400 // Animation plus rapide
+        animator.duration = 350
         animator.interpolator = AccelerateDecelerateInterpolator()
 
         animator.addUpdateListener { animation ->
@@ -70,29 +89,34 @@ class SevenSegmentDisplay(
         digit2.text = integerPart.getOrNull(1)?.toString() ?: "0"
         digit3.text = decimalPart
 
-        // Effet de flash lors du changement
+        // S'assurer que les digits sont visibles
+        digit1.visibility = android.view.View.VISIBLE
+        digit2.visibility = android.view.View.VISIBLE
+        digit3.visibility = android.view.View.VISIBLE
+
+        // Effet de flash intense lors du changement
         applyFlashEffect()
     }
 
     private fun applyFlashEffect() {
         listOf(digit1, digit2, digit3).forEach { digit ->
-            // Flash temporaire plus brillant
+            // Flash ultra brillant
             digit.setShadowLayer(
-                28f,
+                32f,
                 0f,
                 0f,
                 0xFFFF3333.toInt()
             )
 
-            // Retour au glow normal après 150ms
+            // Retour au glow normal
             digit.postDelayed({
                 digit.setShadowLayer(
-                    20f,
+                    24f,
                     0f,
                     0f,
                     0xFFFF0000.toInt()
                 )
-            }, 150)
+            }, 120)
         }
     }
 

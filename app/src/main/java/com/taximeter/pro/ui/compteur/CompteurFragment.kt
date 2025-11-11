@@ -55,6 +55,14 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         startContinuousLedAnimations()
     }
 
+    private fun setupSevenSegmentDisplay() {
+        val digit1 = binding.digit1
+        val digit2 = binding.digit2
+        val digit3 = binding.digit3
+        sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
+        sevenSegmentDisplay.setNumber(2.5)
+    }
+
     private fun startEntryAnimations() {
         binding.header.apply {
             alpha = 0f
@@ -67,8 +75,8 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         binding.cardFare.apply {
             alpha = 0f
-            scaleX = 0.8f
-            scaleY = 0.8f
+            scaleX = 0.85f
+            scaleY = 0.85f
             postDelayed({
                 animate().alpha(1f).scaleX(1f).scaleY(1f)
                     .setDuration(800)
@@ -112,37 +120,25 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun startContinuousLedAnimations() {
-        // Animation continue pour LED GPS
         startLedPulseAnimation(binding.indicatorGps)
-
-        // Animation continue pour LED Système
         startLedPulseAnimation(binding.indicatorSystem)
     }
 
     private fun startLedPulseAnimation(view: View) {
-        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.5f, 1f)
+        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.6f, 1f)
         pulseAnimator.duration = 1500
         pulseAnimator.repeatCount = ValueAnimator.INFINITE
         pulseAnimator.interpolator = AccelerateDecelerateInterpolator()
         pulseAnimator.start()
     }
 
-    private fun setupSevenSegmentDisplay() {
-        val digit1 = binding.root.findViewById<TextView>(R.id.digit_1)
-        val digit2 = binding.root.findViewById<TextView>(R.id.digit_2)
-        val digit3 = binding.root.findViewById<TextView>(R.id.digit_3)
-
-        sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
-        sevenSegmentDisplay.setNumber(2.5)
-    }
-
     private fun setupHeaderButtons() {
-        binding.root.findViewById<View>(R.id.btn_menu)?.setOnClickListener {
+        binding.btnMenu?.setOnClickListener {
             animateClick(it)
             (activity as? MainActivity)?.openDrawer()
         }
 
-        binding.root.findViewById<View>(R.id.btn_info)?.setOnClickListener {
+        binding.btnInfo?.setOnClickListener {
             animateClick(it)
             showInfoDialog()
         }
@@ -169,14 +165,14 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             .setMessage(
                 """
                 TaxiMeter Pro v1.0
-                
+
                 Application de compteur de taxi professionnel.
-                
+
                 Tarifs:
                 • Prise en charge: 2.5 DH
                 • Prix par km: 1.5 DH
                 • Prix par minute: 0.5 DH
-                
+
                 Développé par Salah Eddine
                 """.trimIndent()
             )
@@ -209,14 +205,14 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun animateDisplayFlash(view: View) {
         view.animate()
-            .scaleX(1.03f)
-            .scaleY(1.03f)
-            .setDuration(100)
+            .scaleX(1.02f)
+            .scaleY(1.02f)
+            .setDuration(80)
             .withEndAction {
                 view.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(100)
+                    .setDuration(80)
                     .start()
             }
             .start()
@@ -226,7 +222,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val currentValue = textView.text.toString().toDoubleOrNull() ?: 0.0
 
         ValueAnimator.ofFloat(currentValue.toFloat(), newValue.toFloat()).apply {
-            duration = 400
+            duration = 350
             interpolator = AccelerateDecelerateInterpolator()
             addUpdateListener { animation ->
                 val value = animation.animatedValue as Float
@@ -235,16 +231,15 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             start()
         }
 
-        // Flash effect
         textView.animate()
-            .scaleX(1.08f)
-            .scaleY(1.08f)
-            .setDuration(80)
+            .scaleX(1.06f)
+            .scaleY(1.06f)
+            .setDuration(70)
             .withEndAction {
                 textView.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(80)
+                    .setDuration(70)
                     .start()
             }
             .start()
@@ -252,15 +247,15 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun animateTextChange(textView: TextView, newText: String) {
         textView.animate()
-            .scaleX(1.08f)
-            .scaleY(1.08f)
-            .setDuration(80)
+            .scaleX(1.06f)
+            .scaleY(1.06f)
+            .setDuration(70)
             .withEndAction {
                 textView.text = newText
                 textView.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(80)
+                    .setDuration(70)
                     .start()
             }
             .start()
@@ -288,7 +283,6 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 viewModel.resetTrip()
                 stopLocationService()
 
-                // Animation de rotation 3D
                 binding.cardFare.animate()
                     .rotationY(90f)
                     .setDuration(200)
@@ -314,8 +308,8 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun animateButtonPress(button: View, action: () -> Unit) {
         button.animate()
-            .scaleX(0.95f)
-            .scaleY(0.95f)
+            .scaleX(0.96f)
+            .scaleY(0.96f)
             .setDuration(100)
             .withEndAction {
                 button.animate()
