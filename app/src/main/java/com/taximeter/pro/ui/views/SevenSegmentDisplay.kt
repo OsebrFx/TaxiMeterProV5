@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.core.content.res.ResourcesCompat
 import com.taximeter.pro.R
 import java.util.Locale
 import kotlin.math.min
@@ -151,13 +152,21 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // Paint pour le texte style digital avec police monospace
+        // Charger la police 7-segment personnalisée
+        val customTypeface = try {
+            ResourcesCompat.getFont(context, R.font.font_dig)
+        } catch (e: Exception) {
+            // Fallback vers MONOSPACE si la police n'est pas trouvée
+            Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+        }
+
+        // Paint pour le texte style digital avec police 7-segment
         val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = activeColor
             textSize = (height - paddingTop - paddingBottom) * 0.7f
-            typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+            typeface = customTypeface
             textAlign = Paint.Align.CENTER
-            letterSpacing = 0.2f  // Espacement entre caractères
+            letterSpacing = 0.15f  // Espacement optimal pour police 7-segment
         }
 
         val text = when (displayType) {
