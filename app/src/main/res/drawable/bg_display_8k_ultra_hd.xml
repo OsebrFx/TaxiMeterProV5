@@ -92,7 +92,7 @@
     <!-- Couche 7: Reflet supérieur subtil pour réalisme -->
     <item
         android:top="16dp"
-        android:bottom="80%"
+        android:bottom="200dp"
         android:left="16dp"
         android:right="16dp">
         <shape android:shape="rectangle">
@@ -111,7 +111,7 @@
 
     <!-- Couche 8: Ombre inférieure pour profondeur -->
     <item
-        android:top="70%"
+        android:top="200dp"
         android:bottom="16dp"
         android:left="16dp"
         android:right="16dp">
