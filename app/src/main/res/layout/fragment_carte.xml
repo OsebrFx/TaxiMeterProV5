@@ -77,10 +77,12 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Card GPS Status Ultra Réaliste 8K -->
+    <!-- Card GPS Status Ultra Réaliste 8K -->
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:elevation="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -89,8 +91,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_display_ultra_realistic"
-            android:elevation="24dp" />
+            android:background="@drawable/bg_display_optimized" />
 
         <!-- Contenu -->
         <LinearLayout
@@ -111,7 +112,8 @@
                 android:shadowColor="#FFD700"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="12" />
+                android:shadowRadius="12"
+                android:background="@android:color/transparent" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -144,7 +146,8 @@
                     android:shadowColor="#22FF22"
                     android:shadowDx="0"
                     android:shadowDy="0"
-                    android:shadowRadius="12" />
+                    android:shadowRadius="12"
+                    android:background="@android:color/transparent" />
 
             </LinearLayout>
 

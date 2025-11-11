@@ -59,6 +59,18 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val digit1 = binding.digit1
         val digit2 = binding.digit2
         val digit3 = binding.digit3
+
+        // CRITIQUE: Forcer l'affichage initial
+        digit1.visibility = View.VISIBLE
+        digit2.visibility = View.VISIBLE
+        digit3.visibility = View.VISIBLE
+        digit1.text = "2"
+        digit2.text = "5"
+        digit3.text = "0"
+        digit1.bringToFront()
+        digit2.bringToFront()
+        digit3.bringToFront()
+
         sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
         sevenSegmentDisplay.setNumber(2.5)
     }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Cadre extérieur métallique sombre -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0d0d0d" />
+            <corners android:radius="16dp" />
+            <stroke android:width="4dp" android:color="#1a1a1a" />
+        </shape>
+    </item>
+
+    <!-- Bordure métallique intermédiaire -->
+    <item android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1a1a1a" />
+            <corners android:radius="14dp" />
+            <stroke android:width="2dp" android:color="#2a2a2a" />
+        </shape>
+    </item>
+
+    <!-- Écran LCD noir profond - SANS GRADIENT pour ne pas cacher le texte -->
+    <item android:top="12dp" android:bottom="12dp" android:left="12dp" android:right="12dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#000000" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+</layer-list>

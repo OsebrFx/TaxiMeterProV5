@@ -37,12 +37,12 @@ class SevenSegmentDisplay(
             // Police monospace pour look digital authentique
             digit.typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
 
-            // Couleur rouge vif LED
+            // Couleur rouge vif LED avec alpha complet
             digit.setTextColor(0xFFFF0000.toInt())
 
             // Effet de glow multi-couches pour réalisme maximal
             digit.setShadowLayer(
-                24f,  // radius externe
+                20f,  // radius externe
                 0f,   // dx
                 0f,   // dy
                 0xFFFF0000.toInt()  // couleur glow rouge
@@ -51,8 +51,12 @@ class SevenSegmentDisplay(
             // Espacement optimal pour affichage 7-segment
             digit.letterSpacing = 0f
 
-            // Rendre les digits visibles
+            // CRITIQUE: Rendre les digits complètement visibles
+            digit.visibility = android.view.View.VISIBLE
             digit.alpha = 1f
+
+            // S'assurer que le texte est au premier plan
+            digit.bringToFront()
         }
     }
 
@@ -89,10 +93,13 @@ class SevenSegmentDisplay(
         digit2.text = integerPart.getOrNull(1)?.toString() ?: "0"
         digit3.text = decimalPart
 
-        // S'assurer que les digits sont visibles
+        // CRITIQUE: Forcer la visibilité et le refresh
         digit1.visibility = android.view.View.VISIBLE
         digit2.visibility = android.view.View.VISIBLE
         digit3.visibility = android.view.View.VISIBLE
+        digit1.invalidate()
+        digit2.invalidate()
+        digit3.invalidate()
 
         // Effet de flash intense lors du changement
         applyFlashEffect()

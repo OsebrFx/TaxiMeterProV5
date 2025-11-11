@@ -108,7 +108,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- DISPLAY PRINCIPAL ULTRA RÉALISTE 8K -->
+            <!-- DISPLAY PRINCIPAL ULTRA RÉALISTE 8K - MODIFIÉ -->
             <FrameLayout
                 android:id="@+id/card_fare"
                 android:layout_width="0dp"
@@ -118,11 +118,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Background ultra réaliste -->
+                <!-- Background ultra réaliste OPTIMISÉ -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_display_ultra_realistic"
+                    android:background="@drawable/bg_display_optimized"
                     android:elevation="20dp" />
 
                 <!-- Contenu du display -->
@@ -159,7 +159,8 @@
                             android:shadowDy="0"
                             android:shadowRadius="20"
                             android:letterSpacing="0"
-                            android:includeFontPadding="false" />
+                            android:includeFontPadding="false"
+                            android:background="@android:color/transparent" />
 
                         <!-- Digit 2 -->
                         <TextView
@@ -178,7 +179,8 @@
                             android:shadowDy="0"
                             android:shadowRadius="20"
                             android:letterSpacing="0"
-                            android:includeFontPadding="false" />
+                            android:includeFontPadding="false"
+                            android:background="@android:color/transparent" />
 
                         <!-- Point décimal -->
                         <TextView
@@ -195,7 +197,8 @@
                             android:shadowDx="0"
                             android:shadowDy="0"
                             android:shadowRadius="20"
-                            android:includeFontPadding="false" />
+                            android:includeFontPadding="false"
+                            android:background="@android:color/transparent" />
 
                         <!-- Digit 3 -->
                         <TextView
@@ -214,7 +217,8 @@
                             android:shadowDy="0"
                             android:shadowRadius="20"
                             android:letterSpacing="0"
-                            android:includeFontPadding="false" />
+                            android:includeFontPadding="false"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
 
@@ -231,7 +235,8 @@
                         android:shadowColor="#FF0000"
                         android:shadowDx="0"
                         android:shadowDy="0"
-                        android:shadowRadius="18" />
+                        android:shadowRadius="18"
+                        android:background="@android:color/transparent" />
 
                 </LinearLayout>
 
@@ -278,7 +283,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_display_ultra_realistic"
+                            android:background="@drawable/bg_display_optimized"
                             android:elevation="16dp" />
 
                         <LinearLayout
@@ -303,6 +308,7 @@
                                 android:shadowRadius="16"
                                 android:letterSpacing="0.05"
                                 android:includeFontPadding="false"
+                                android:background="@android:color/transparent"
                                 tools:text="05:42" />
 
                             <TextView
@@ -316,7 +322,8 @@
                                 android:shadowColor="#FFD700"
                                 android:shadowDx="0"
                                 android:shadowDy="0"
-                                android:shadowRadius="6" />
+                                android:shadowRadius="6"
+                                android:background="@android:color/transparent" />
 
                         </LinearLayout>
 
@@ -354,7 +361,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_display_ultra_realistic"
+                            android:background="@drawable/bg_display_optimized"
                             android:elevation="16dp" />
 
                         <LinearLayout
@@ -379,6 +386,7 @@
                                 android:shadowRadius="16"
                                 android:letterSpacing="0.05"
                                 android:includeFontPadding="false"
+                                android:background="@android:color/transparent"
                                 tools:text="12.5" />
 
                             <TextView
@@ -392,7 +400,8 @@
                                 android:shadowColor="#FFD700"
                                 android:shadowDx="0"
                                 android:shadowDy="0"
-                                android:shadowRadius="6" />
+                                android:shadowRadius="6"
+                                android:background="@android:color/transparent" />
 
                         </LinearLayout>
 
@@ -415,7 +424,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_display_ultra_realistic"
+                    android:background="@drawable/bg_display_optimized"
                     android:elevation="14dp" />
 
                 <LinearLayout
@@ -452,7 +461,8 @@
                             android:textColor="#666666"
                             android:textSize="11sp"
                             android:textStyle="bold"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
 
@@ -487,7 +497,8 @@
                             android:shadowColor="#22FF22"
                             android:shadowDx="0"
                             android:shadowDy="0"
-                            android:shadowRadius="8" />
+                            android:shadowRadius="8"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
 
@@ -522,7 +533,8 @@
                             android:shadowColor="#22FF22"
                             android:shadowDx="0"
                             android:shadowDy="0"
-                            android:shadowRadius="8" />
+                            android:shadowRadius="8"
+                            android:background="@android:color/transparent" />
 
                     </LinearLayout>
 
