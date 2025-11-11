@@ -152,35 +152,35 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
-        // Calculer les dimensions
+        // Calculer les dimensions avec meilleur espacement
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 6.5f  // 4 digits + point + espace pour DH
+        val digitWidth = totalWidth / 7.5f  // Plus d'espace pour éviter chevauchement
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat()
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.2f  // Marge gauche
         val yOffset = paddingTop.toFloat()
 
         // Dessiner partie entière (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f  // Plus d'espacement entre digits
         }
 
         // Point décimal
-        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 20f
+        drawDecimalPoint(canvas, xOffset + 6f, yOffset, digitHeight)
+        xOffset += 28f  // Plus d'espace après le point
 
         // Partie décimale (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f
         }
 
         // Unité DH avec taille adaptative
-        xOffset += 25f
-        val dhTextSize = digitHeight * 0.35f
+        xOffset += 20f
+        val dhTextSize = digitHeight * 0.4f  // Plus grand pour meilleure visibilité
         unitPaint.textSize = dhTextSize
         canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.55f, unitPaint)
     }
@@ -193,26 +193,26 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 4.8f
+        val digitWidth = totalWidth / 5.5f  // Plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat()
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.15f  // Marge gauche
         val yOffset = paddingTop.toFloat()
 
         // Minutes (2 digits)
         for (i in 0..1) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f  // Espacement amélioré
         }
 
         // Deux points ":"
-        drawColon(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 20f
+        drawColon(canvas, xOffset + 6f, yOffset, digitHeight)
+        xOffset += 28f  // Plus d'espace après les deux points
 
         // Secondes (2 digits)
         for (i in 2..3) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f
         }
     }
 
@@ -224,28 +224,28 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 5f  // 4 digits + point
+        val digitWidth = totalWidth / 5.8f  // Plus d'espace pour éviter chevauchement
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat()
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.15f  // Marge gauche
         val yOffset = paddingTop.toFloat()
 
         // Partie entière (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f  // Espacement amélioré
         }
 
         // Point décimal
-        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 20f
+        drawDecimalPoint(canvas, xOffset + 6f, yOffset, digitHeight)
+        xOffset += 28f  // Plus d'espace après le point
 
         // Partie décimale (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 8f
+            xOffset += digitWidth + 12f
         }
     }
 
