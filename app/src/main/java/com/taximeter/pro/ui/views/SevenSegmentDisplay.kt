@@ -151,286 +151,37 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        when (displayType) {
-            DisplayType.MONEY -> drawMoney(canvas)
-            DisplayType.TIME -> drawTime(canvas)
-            DisplayType.DISTANCE -> drawDistance(canvas)
-        }
-    }
-
-    private fun drawMoney(canvas: Canvas) {
-        // Format: XX.XX DH
-        val formatted = String.format(Locale.US, "%.2f", currentValue)
-        val parts = formatted.split(".")
-        val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
-        val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
-
-        // Approche simple avec espacement généreux
-        val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 11f  // Beaucoup d'espace pour chaque chiffre
-        val digitHeight = (height - paddingTop - paddingBottom).toFloat()
-
-        var xOffset = paddingLeft.toFloat() + 20f
-        val yOffset = paddingTop.toFloat()
-
-        // Partie entière (2 digits) avec ÉNORME espacement
-        for (i in 0 until 2) {
-            val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
-            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total - comme calculatrice
-        }
-
-        // Point décimal
-        xOffset += 15f
-        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 35f
-
-        // Partie décimale (2 digits) avec ÉNORME espacement
-        for (i in 0 until 2) {
-            val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
-            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total - comme calculatrice
-        }
-
-        // "DH" en texte normal (pas 7-segments)
-        xOffset += 25f
-        val dhPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // Paint pour le texte style digital avec police monospace
+        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = activeColor
-            textSize = digitHeight * 0.35f
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-            textAlign = Paint.Align.LEFT
-        }
-        canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.65f, dhPaint)
-    }
-
-    private fun drawTime(canvas: Canvas) {
-        // Format: 00:00
-        val totalSeconds = currentValue.toInt()
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
-
-        val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 8f  // Plus d'espace
-        val digitHeight = (height - paddingTop - paddingBottom).toFloat()
-
-        var xOffset = paddingLeft.toFloat() + 15f
-        val yOffset = paddingTop.toFloat()
-
-        // Minutes (2 digits) avec ÉNORME espacement
-        for (i in 0..1) {
-            drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total
+            textSize = (height - paddingTop - paddingBottom) * 0.7f
+            typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+            letterSpacing = 0.2f  // Espacement entre caractères
         }
 
-        // Deux points ":"
-        xOffset += 15f
-        drawColon(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 40f
-
-        // Secondes (2 digits) avec ÉNORME espacement
-        for (i in 2..3) {
-            drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total
-        }
-    }
-
-    private fun drawDistance(canvas: Canvas) {
-        // Format: XX.XX
-        val formatted = String.format(Locale.US, "%.2f", currentValue)
-        val parts = formatted.split(".")
-        val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
-        val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
-
-        val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 8f  // Plus d'espace
-        val digitHeight = (height - paddingTop - paddingBottom).toFloat()
-
-        var xOffset = paddingLeft.toFloat() + 15f
-        val yOffset = paddingTop.toFloat()
-
-        // Partie entière (2 digits) avec ÉNORME espacement
-        for (i in 0 until 2) {
-            val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
-            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total
+        val text = when (displayType) {
+            DisplayType.MONEY -> {
+                val formatted = String.format(Locale.US, "%.2f", currentValue)
+                "$formatted DH"
+            }
+            DisplayType.TIME -> {
+                val totalSeconds = currentValue.toInt()
+                val minutes = totalSeconds / 60
+                val seconds = totalSeconds % 60
+                String.format(Locale.US, "%02d:%02d", minutes, seconds)
+            }
+            DisplayType.DISTANCE -> {
+                String.format(Locale.US, "%.2f", currentValue)
+            }
         }
 
-        // Point décimal
-        xOffset += 15f
-        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 40f
+        // Centrer le texte verticalement et horizontalement
+        val x = width / 2f
+        val y = height / 2f + (textPaint.textSize / 3f)
 
-        // Partie décimale (2 digits) avec ÉNORME espacement
-        for (i in 0 until 2) {
-            val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
-            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 2f  // 200% d'espace total
-        }
+        canvas.drawText(text, x, y, textPaint)
     }
-
-    private fun drawDigit(canvas: Canvas, digit: Int, x: Float, y: Float, width: Float, height: Float) {
-        val segments = getSegmentsForDigit(digit)
-
-        // SEGMENTS ULTRA COMPACTS comme une vraie calculatrice
-        val segmentWidth = width * 0.45f  // TRÈS compact: 45% seulement
-        val segmentHeight = height * 0.10f
-        val verticalWidth = height * 0.10f
-        val verticalHeight = height * 0.38f
-
-        // Bien centrer les segments avec grandes marges
-        val marginLeft = width * 0.275f  // Marge 27.5% pour centrer parfaitement
-
-        val positions = mapOf(
-            'a' to SegmentPos(x + marginLeft, y + height * 0.02f, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + marginLeft, y + height * 0.88f, segmentWidth, segmentHeight),
-            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + marginLeft, y + height * 0.46f, segmentWidth, segmentHeight)
-        )
-
-        positions.forEach { (seg, pos) ->
-            drawSegment(canvas, pos, seg in segments)
-        }
-    }
-
-    private fun drawSegment(canvas: Canvas, pos: SegmentPos, active: Boolean) {
-        val path = createSegmentPath(pos)
-
-        if (active) {
-            // Dessiner d'abord un léger glow derrière (optionnel et très subtil)
-            val glowPath = Path(path)
-            canvas.drawPath(glowPath, glowPaint)
-
-            // Puis dessiner le segment net et clair au-dessus
-            canvas.drawPath(path, activePaint)
-        } else {
-            // Segments inactifs: nets sans flou
-            canvas.drawPath(path, inactivePaint)
-        }
-    }
-
-    private fun createSegmentPath(pos: SegmentPos): Path {
-        val path = Path()
-
-        if (pos.width > pos.height) {
-            // Segment horizontal
-            val indent = pos.height * 0.3f
-            path.moveTo(pos.x + indent, pos.y)
-            path.lineTo(pos.x + pos.width - indent, pos.y)
-            path.lineTo(pos.x + pos.width, pos.y + pos.height / 2)
-            path.lineTo(pos.x + pos.width - indent, pos.y + pos.height)
-            path.lineTo(pos.x + indent, pos.y + pos.height)
-            path.lineTo(pos.x, pos.y + pos.height / 2)
-            path.close()
-        } else {
-            // Segment vertical
-            val indent = pos.width * 0.3f
-            path.moveTo(pos.x + pos.width / 2, pos.y)
-            path.lineTo(pos.x + pos.width, pos.y + indent)
-            path.lineTo(pos.x + pos.width, pos.y + pos.height - indent)
-            path.lineTo(pos.x + pos.width / 2, pos.y + pos.height)
-            path.lineTo(pos.x, pos.y + pos.height - indent)
-            path.lineTo(pos.x, pos.y + indent)
-            path.close()
-        }
-
-        return path
-    }
-
-    private fun drawDecimalPoint(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.08f
-        val centerY = y + height * 0.88f
-
-        // Glow subtil derrière
-        canvas.drawCircle(x, centerY, radius * 1.4f, glowPaint)
-
-        // Point principal net et clair
-        canvas.drawCircle(x, centerY, radius, activePaint)
-    }
-
-    private fun drawColon(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.08f
-        val upperY = y + height * 0.35f
-        val lowerY = y + height * 0.65f
-
-        // Point supérieur - glow subtil puis point net
-        canvas.drawCircle(x, upperY, radius * 1.4f, glowPaint)
-        canvas.drawCircle(x, upperY, radius, activePaint)
-
-        // Point inférieur - glow subtil puis point net
-        canvas.drawCircle(x, lowerY, radius * 1.4f, glowPaint)
-        canvas.drawCircle(x, lowerY, radius, activePaint)
-    }
-
-    private fun getSegmentsForDigit(digit: Int): Set<Char> {
-        return when (digit) {
-            0 -> setOf('a', 'b', 'c', 'd', 'e', 'f')
-            1 -> setOf('b', 'c')
-            2 -> setOf('a', 'b', 'd', 'e', 'g')
-            3 -> setOf('a', 'b', 'c', 'd', 'g')
-            4 -> setOf('b', 'c', 'f', 'g')
-            5 -> setOf('a', 'c', 'd', 'f', 'g')
-            6 -> setOf('a', 'c', 'd', 'e', 'f', 'g')
-            7 -> setOf('a', 'b', 'c')
-            8 -> setOf('a', 'b', 'c', 'd', 'e', 'f', 'g')
-            9 -> setOf('a', 'b', 'c', 'd', 'f', 'g')
-            else -> emptySet()
-        }
-    }
-
-    // Dessiner la lettre "D" en style 7-segments - ULTRA COMPACT
-    private fun drawLetterD(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
-        // D = segments a, b, c, d, e, f (comme 0)
-        val segments = setOf('a', 'b', 'c', 'd', 'e', 'f')
-
-        val segmentWidth = width * 0.45f  // ULTRA compact comme calculatrice
-        val segmentHeight = height * 0.10f
-        val verticalWidth = height * 0.10f
-        val verticalHeight = height * 0.38f
-        val marginLeft = width * 0.275f
-
-        val positions = mapOf(
-            'a' to SegmentPos(x + marginLeft, y + height * 0.02f, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + marginLeft, y + height * 0.88f, segmentWidth, segmentHeight),
-            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight)
-        )
-
-        positions.forEach { (seg, pos) ->
-            drawSegment(canvas, pos, seg in segments)
-        }
-    }
-
-    // Dessiner la lettre "H" en style 7-segments - ULTRA COMPACT
-    private fun drawLetterH(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
-        // H = segments b, c, e, f, g
-        val segments = setOf('b', 'c', 'e', 'f', 'g')
-
-        val segmentWidth = width * 0.45f  // ULTRA compact comme calculatrice
-        val segmentHeight = height * 0.10f
-        val verticalWidth = height * 0.10f
-        val verticalHeight = height * 0.38f
-        val marginLeft = width * 0.275f
-
-        val positions = mapOf(
-            'b' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.10f, verticalWidth, verticalHeight),
-            'c' to SegmentPos(x + marginLeft + segmentWidth, y + height * 0.52f, verticalWidth, verticalHeight),
-            'e' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + marginLeft - verticalWidth * 0.5f, y + height * 0.10f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + marginLeft, y + height * 0.46f, segmentWidth, segmentHeight)
-        )
-
-        positions.forEach { (seg, pos) ->
-            drawSegment(canvas, pos, seg in segments)
-        }
-    }
-
-    private data class SegmentPos(val x: Float, val y: Float, val width: Float, val height: Float)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val desiredWidth = 600
