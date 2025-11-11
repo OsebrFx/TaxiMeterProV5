@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Couche 1: Ombre externe profonde -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp"/>
+            <gradient
+                android:angle="135"
+                android:startColor="#FF000000"
+                android:centerColor="#FF0A0A0A"
+                android:endColor="#FF000000"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Couche 2: Cadre métal foncé externe -->
+    <item
+        android:top="3dp"
+        android:bottom="3dp"
+        android:left="3dp"
+        android:right="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp"/>
+            <gradient
+                android:angle="45"
+                android:startColor="#FF1A1A1A"
+                android:centerColor="#FF2A2A2A"
+                android:endColor="#FF1A1A1A"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Couche 3: Cadre métal moyen -->
+    <item
+        android:top="6dp"
+        android:bottom="6dp"
+        android:left="6dp"
+        android:right="6dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp"/>
+            <gradient
+                android:angle="225"
+                android:startColor="#FF333333"
+                android:centerColor="#FF444444"
+                android:endColor="#FF333333"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Couche 4: Cadre métal interne avec reflet -->
+    <item
+        android:top="10dp"
+        android:bottom="10dp"
+        android:left="10dp"
+        android:right="10dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp"/>
+            <gradient
+                android:angle="45"
+                android:startColor="#FF3A3A3A"
+                android:centerColor="#FF505050"
+                android:endColor="#FF3A3A3A"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Couche 5: Bordure LCD légère -->
+    <item
+        android:top="14dp"
+        android:bottom="14dp"
+        android:left="14dp"
+        android:right="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="12dp"/>
+            <solid android:color="#FF0D0D0D"/>
+        </shape>
+    </item>
+
+    <!-- Couche 6: Écran LCD noir pur -->
+    <item
+        android:top="16dp"
+        android:bottom="16dp"
+        android:left="16dp"
+        android:right="16dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp"/>
+            <solid android:color="#FF000000"/>
+        </shape>
+    </item>
+
+    <!-- Couche 7: Reflet supérieur subtil pour réalisme -->
+    <item
+        android:top="16dp"
+        android:bottom="80%"
+        android:left="16dp"
+        android:right="16dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp"/>
+            <gradient
+                android:angle="270"
+                android:startColor="#11FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <!-- Couche 8: Ombre inférieure pour profondeur -->
+    <item
+        android:top="70%"
+        android:bottom="16dp"
+        android:left="16dp"
+        android:right="16dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp"/>
+            <gradient
+                android:angle="90"
+                android:startColor="#22000000"
+                android:endColor="#00000000"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+</layer-list>

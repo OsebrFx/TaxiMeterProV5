@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Couche 1: Glow externe très large -->
+    <item>
+        <shape android:shape="oval">
+            <size android:width="42dp" android:height="42dp"/>
+            <gradient
+                android:type="radial"
+                android:gradientRadius="21dp"
+                android:centerColor="#4400FF00"
+                android:endColor="#0000FF00"/>
+        </shape>
+    </item>
+
+    <!-- Couche 2: Glow moyen -->
+    <item
+        android:top="6dp"
+        android:bottom="6dp"
+        android:left="6dp"
+        android:right="6dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="15dp"
+                android:centerColor="#8833FF33"
+                android:endColor="#0033FF33"/>
+        </shape>
+    </item>
+
+    <!-- Couche 3: Corps de la LED -->
+    <item
+        android:top="10dp"
+        android:bottom="10dp"
+        android:left="10dp"
+        android:right="10dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="11dp"
+                android:centerColor="#FF00FF00"
+                android:endColor="#FF00CC00"/>
+        </shape>
+    </item>
+
+    <!-- Couche 4: Reflet central brillant -->
+    <item
+        android:top="11dp"
+        android:bottom="19dp"
+        android:left="11dp"
+        android:right="19dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="5dp"
+                android:centerColor="#BBFFFFFF"
+                android:endColor="#00FFFFFF"/>
+        </shape>
+    </item>
+
+    <!-- Couche 5: Point lumineux ultra brillant -->
+    <item
+        android:top="13dp"
+        android:bottom="25dp"
+        android:left="13dp"
+        android:right="25dp">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFFFF"/>
+        </shape>
+    </item>
+
+</layer-list>

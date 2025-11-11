@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.OvershootInterpolator
+import android.view.animation.BounceInterpolator
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,7 +21,7 @@ import com.taximeter.pro.databinding.FragmentCompteurBinding
 import com.taximeter.pro.service.LocationTrackingService
 import com.taximeter.pro.viewmodel.TaxiMeterViewModel
 import com.taximeter.pro.utils.NotificationHelper
-import com.taximeter.pro.utils.SevenSegmentDisplay
+import com.taximeter.pro.ui.views.RealisticSevenSegmentView
 
 class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
@@ -27,7 +29,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private val binding get() = _binding!!
 
     private val viewModel: TaxiMeterViewModel by activityViewModels()
-    private lateinit var sevenSegmentDisplay: SevenSegmentDisplay
+    private lateinit var realisticSevenSegment: RealisticSevenSegmentView
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST = 100
@@ -56,78 +58,89 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun setupSevenSegmentDisplay() {
-        val digit1 = binding.digit1
-        val digit2 = binding.digit2
-        val digit3 = binding.digit3
-
-        // CRITIQUE: Forcer l'affichage initial
-        digit1.visibility = View.VISIBLE
-        digit2.visibility = View.VISIBLE
-        digit3.visibility = View.VISIBLE
-        digit1.text = "2"
-        digit2.text = "5"
-        digit3.text = "0"
-        digit1.bringToFront()
-        digit2.bringToFront()
-        digit3.bringToFront()
-
-        sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
-        sevenSegmentDisplay.setNumber(2.5)
+        realisticSevenSegment = binding.realisticSevenSegment
+        realisticSevenSegment.setValue(2.5, animate = false)
     }
 
     private fun startEntryAnimations() {
+        // Animation header avec bounce
         binding.header.apply {
             alpha = 0f
-            translationY = -100f
-            animate().alpha(1f).translationY(0f)
-                .setDuration(600)
-                .setInterpolator(AccelerateDecelerateInterpolator())
+            translationY = -120f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(700)
+                .setInterpolator(OvershootInterpolator(1.2f))
                 .start()
         }
 
+        // Animation display principal avec effet zoom + rotation
         binding.cardFare.apply {
             alpha = 0f
-            scaleX = 0.85f
-            scaleY = 0.85f
+            scaleX = 0.7f
+            scaleY = 0.7f
+            rotationY = 90f
             postDelayed({
-                animate().alpha(1f).scaleX(1f).scaleY(1f)
-                    .setDuration(800)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
+                animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .rotationY(0f)
+                    .setDuration(900)
+                    .setInterpolator(OvershootInterpolator(0.8f))
                     .start()
-            }, 200)
+            }, 250)
         }
 
+        // Animation temps/distance avec slide et bounce
         binding.containerTimeDistance.apply {
             alpha = 0f
-            translationY = 50f
+            translationY = 80f
+            scaleX = 0.9f
+            scaleY = 0.9f
             postDelayed({
-                animate().alpha(1f).translationY(0f)
-                    .setDuration(700)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(800)
+                    .setInterpolator(BounceInterpolator())
                     .start()
-            }, 400)
+            }, 450)
         }
 
+        // Animation panel LED avec glow
         binding.cardStatus.apply {
             alpha = 0f
-            translationY = 50f
+            translationY = 60f
+            scaleX = 0.95f
+            scaleY = 0.95f
             postDelayed({
-                animate().alpha(1f).translationY(0f)
-                    .setDuration(700)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(750)
+                    .setInterpolator(OvershootInterpolator(0.6f))
                     .start()
-            }, 600)
+            }, 650)
         }
 
+        // Animation boutons avec effet wave
         binding.containerButtons.apply {
             alpha = 0f
-            translationY = 50f
+            translationY = 70f
             postDelayed({
-                animate().alpha(1f).translationY(0f)
-                    .setDuration(700)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(800)
+                    .setInterpolator(OvershootInterpolator(0.5f))
                     .start()
-            }, 800)
+            }, 850)
         }
     }
 
@@ -137,11 +150,24 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun startLedPulseAnimation(view: View) {
-        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.6f, 1f)
-        pulseAnimator.duration = 1500
-        pulseAnimator.repeatCount = ValueAnimator.INFINITE
-        pulseAnimator.interpolator = AccelerateDecelerateInterpolator()
-        pulseAnimator.start()
+        // Animation de pulsation réaliste avec scale
+        val alphaAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.7f, 1f)
+        alphaAnimator.duration = 1800
+        alphaAnimator.repeatCount = ValueAnimator.INFINITE
+        alphaAnimator.interpolator = AccelerateDecelerateInterpolator()
+        alphaAnimator.start()
+
+        val scaleXAnimator = ObjectAnimator.ofFloat(view, "scaleX", 1f, 1.1f, 1f)
+        scaleXAnimator.duration = 1800
+        scaleXAnimator.repeatCount = ValueAnimator.INFINITE
+        scaleXAnimator.interpolator = AccelerateDecelerateInterpolator()
+        scaleXAnimator.start()
+
+        val scaleYAnimator = ObjectAnimator.ofFloat(view, "scaleY", 1f, 1.1f, 1f)
+        scaleYAnimator.duration = 1800
+        scaleYAnimator.repeatCount = ValueAnimator.INFINITE
+        scaleYAnimator.interpolator = AccelerateDecelerateInterpolator()
+        scaleYAnimator.start()
     }
 
     private fun setupHeaderButtons() {
@@ -196,7 +222,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setupObservers() {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
-            sevenSegmentDisplay.setNumber(fare)
+            realisticSevenSegment.setValue(fare, animate = true)
             animateDisplayFlash(binding.cardFare)
         }
 
@@ -216,15 +242,18 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun animateDisplayFlash(view: View) {
+        // Animation flash améliorée avec glow
         view.animate()
-            .scaleX(1.02f)
-            .scaleY(1.02f)
-            .setDuration(80)
+            .scaleX(1.04f)
+            .scaleY(1.04f)
+            .alpha(0.95f)
+            .setDuration(100)
             .withEndAction {
                 view.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(80)
+                    .alpha(1f)
+                    .setDuration(100)
                     .start()
             }
             .start()
@@ -234,7 +263,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val currentValue = textView.text.toString().toDoubleOrNull() ?: 0.0
 
         ValueAnimator.ofFloat(currentValue.toFloat(), newValue.toFloat()).apply {
-            duration = 350
+            duration = 450
             interpolator = AccelerateDecelerateInterpolator()
             addUpdateListener { animation ->
                 val value = animation.animatedValue as Float
@@ -243,15 +272,19 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             start()
         }
 
+        // Animation pulse améliorée
         textView.animate()
-            .scaleX(1.06f)
-            .scaleY(1.06f)
-            .setDuration(70)
+            .scaleX(1.12f)
+            .scaleY(1.12f)
+            .alpha(0.9f)
+            .setDuration(100)
             .withEndAction {
                 textView.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(70)
+                    .alpha(1f)
+                    .setDuration(100)
+                    .setInterpolator(OvershootInterpolator(0.5f))
                     .start()
             }
             .start()
@@ -259,15 +292,18 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun animateTextChange(textView: TextView, newText: String) {
         textView.animate()
-            .scaleX(1.06f)
-            .scaleY(1.06f)
-            .setDuration(70)
+            .scaleX(1.12f)
+            .scaleY(1.12f)
+            .alpha(0.9f)
+            .setDuration(100)
             .withEndAction {
                 textView.text = newText
                 textView.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(70)
+                    .alpha(1f)
+                    .setDuration(100)
+                    .setInterpolator(OvershootInterpolator(0.5f))
                     .start()
             }
             .start()
@@ -295,15 +331,21 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 viewModel.resetTrip()
                 stopLocationService()
 
+                // Animation reset améliorée avec flip 3D
                 binding.cardFare.animate()
                     .rotationY(90f)
-                    .setDuration(200)
+                    .scaleX(0.9f)
+                    .scaleY(0.9f)
+                    .setDuration(250)
                     .withEndAction {
-                        sevenSegmentDisplay.reset()
+                        realisticSevenSegment.setValue(2.5, animate = false)
                         binding.cardFare.rotationY = -90f
                         binding.cardFare.animate()
                             .rotationY(0f)
-                            .setDuration(200)
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(250)
+                            .setInterpolator(OvershootInterpolator(0.5f))
                             .start()
                     }
                     .start()
@@ -319,15 +361,19 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun animateButtonPress(button: View, action: () -> Unit) {
+        // Animation bouton réaliste avec effet mécanique
         button.animate()
-            .scaleX(0.96f)
-            .scaleY(0.96f)
-            .setDuration(100)
+            .scaleX(0.93f)
+            .scaleY(0.93f)
+            .alpha(0.85f)
+            .setDuration(120)
             .withEndAction {
                 button.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(100)
+                    .alpha(1f)
+                    .setDuration(120)
+                    .setInterpolator(OvershootInterpolator(0.8f))
                     .withEndAction {
                         action()
                     }
@@ -340,12 +386,12 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (isRunning) {
             binding.btnStart.text = "PAUSE"
             binding.btnStart.setIconResource(R.drawable.ic_pause)
-            binding.indicatorActif.setBackgroundResource(R.drawable.led_indicator_active)
+            binding.indicatorActif.setBackgroundResource(R.drawable.led_ultra_realistic_red)
             startLedPulseAnimation(binding.indicatorActif)
         } else {
             binding.btnStart.text = "DÉMARRER"
             binding.btnStart.setIconResource(R.drawable.ic_play)
-            binding.indicatorActif.setBackgroundResource(R.drawable.indicator_inactive)
+            binding.indicatorActif.setBackgroundResource(R.drawable.led_ultra_realistic_inactive)
         }
     }
 
