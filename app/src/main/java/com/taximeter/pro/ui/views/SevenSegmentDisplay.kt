@@ -165,44 +165,42 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val intPart = if (parts[0].length >= 2) parts[0] else parts[0].padStart(2, '0')
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
-        // SOLUTION: Donner BEAUCOUP plus d'espace à chaque chiffre
+        // Approche simple avec espacement généreux
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 10f  // Plus large pour éviter débordement
+        val digitWidth = totalWidth / 11f  // Beaucoup d'espace pour chaque chiffre
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + 10f
+        var xOffset = paddingLeft.toFloat() + 20f
         val yOffset = paddingTop.toFloat()
 
-        // Dessiner partie entière (2 digits)
+        // Partie entière (2 digits) avec grand espacement
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f  // Ajouter 120% de largeur du chiffre comme espacement
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
 
         // Point décimal
-        xOffset += 25f
+        xOffset += 15f
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 55f
+        xOffset += 35f
 
-        // Partie décimale (2 digits)
+        // Partie décimale (2 digits) avec grand espacement
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f  // Même espacement proportionnel
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
 
-        // Espace avant DH
-        xOffset += 45f
-
-        // "DH" très petit
-        val dhSize = digitWidth * 0.3f
-        val dhHeight = digitHeight * 0.4f
-        val dhYOffset = yOffset + digitHeight * 0.35f
-
-        drawLetterD(canvas, xOffset, dhYOffset, dhSize, dhHeight)
-        xOffset += dhSize + 4f
-        drawLetterH(canvas, xOffset, dhYOffset, dhSize, dhHeight)
+        // "DH" en texte normal (pas 7-segments)
+        xOffset += 25f
+        val dhPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = activeColor
+            textSize = digitHeight * 0.35f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            textAlign = Paint.Align.LEFT
+        }
+        canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.65f, dhPaint)
     }
 
     private fun drawTime(canvas: Canvas) {
@@ -213,27 +211,27 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 7f  // Plus d'espace par chiffre
+        val digitWidth = totalWidth / 8f  // Plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + 10f
+        var xOffset = paddingLeft.toFloat() + 15f
         val yOffset = paddingTop.toFloat()
 
-        // Minutes (2 digits)
+        // Minutes (2 digits) avec grand espacement
         for (i in 0..1) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f  // Espacement proportionnel
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
 
         // Deux points ":"
-        xOffset += 20f
+        xOffset += 15f
         drawColon(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 50f
+        xOffset += 40f
 
-        // Secondes (2 digits)
+        // Secondes (2 digits) avec grand espacement
         for (i in 2..3) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
     }
 
@@ -245,29 +243,29 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 7f  // Plus d'espace par chiffre
+        val digitWidth = totalWidth / 8f  // Plus d'espace
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + 10f
+        var xOffset = paddingLeft.toFloat() + 15f
         val yOffset = paddingTop.toFloat()
 
-        // Partie entière (2 digits)
+        // Partie entière (2 digits) avec grand espacement
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f  // Espacement proportionnel
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
 
         // Point décimal
-        xOffset += 20f
+        xOffset += 15f
         drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
-        xOffset += 50f
+        xOffset += 40f
 
-        // Partie décimale (2 digits)
+        // Partie décimale (2 digits) avec grand espacement
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth * 1.2f
+            xOffset += digitWidth + digitWidth * 0.5f  // 150% d'espace total
         }
     }
 
