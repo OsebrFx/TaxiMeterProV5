@@ -31,16 +31,15 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     private var targetValue: Double = 0.0
     private var animator: ValueAnimator? = null
 
-    // Couleurs LED ultra réalistes
-    private val activeColor = Color.parseColor("#FF0000")
-    private val inactiveColor = Color.parseColor("#1A0000")
-    private val glowColor = Color.parseColor("#FF3333")
+    // Couleurs LED ultra réalistes - 8K Ultra Sharp
+    private val activeColor = Color.parseColor("#FF0000")      // Rouge vif éclatant
+    private val inactiveColor = Color.parseColor("#0D0000")    // Presque noir (très sombre)
+    private val glowColor = Color.parseColor("#CC0000")        // Rouge moyen pour glow subtil
 
-    // Paints pour les segments - Qualité 8K optimisée
+    // Paints pour les segments - Qualité 8K ULTRA NET (sans flou)
     private val activePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = activeColor
         style = Paint.Style.FILL
-        maskFilter = BlurMaskFilter(18f, BlurMaskFilter.Blur.NORMAL)
         isAntiAlias = true
         isDither = true
         isFilterBitmap = true
@@ -52,21 +51,24 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         isAntiAlias = true
     }
 
+    // Paint pour le glow SUBTIL (très léger uniquement)
     private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = glowColor
+        color = Color.parseColor("#AA0000")
         style = Paint.Style.FILL
-        maskFilter = BlurMaskFilter(32f, BlurMaskFilter.Blur.NORMAL)
+        maskFilter = BlurMaskFilter(6f, BlurMaskFilter.Blur.NORMAL)
         isAntiAlias = true
-        isDither = true
+        alpha = 180
     }
 
+    // Paint pour texte "DH" - ultra net et clair
     private val unitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = activeColor
         textSize = 50f
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
-        maskFilter = BlurMaskFilter(14f, BlurMaskFilter.Blur.NORMAL)
         isAntiAlias = true
         textAlign = Paint.Align.LEFT
+        style = Paint.Style.FILL
+        strokeWidth = 0f
     }
 
     init {
@@ -250,20 +252,20 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     private fun drawDigit(canvas: Canvas, digit: Int, x: Float, y: Float, width: Float, height: Float) {
         val segments = getSegmentsForDigit(digit)
 
-        // Augmentation de la taille des segments pour meilleure visibilité
-        val segmentWidth = width * 0.8f
-        val segmentHeight = height * 0.08f
-        val verticalWidth = height * 0.08f
-        val verticalHeight = height * 0.4f
+        // Segments 8K ultra nets - épaisseur optimale pour clarté maximale
+        val segmentWidth = width * 0.82f
+        val segmentHeight = height * 0.10f  // Plus épais pour meilleure visibilité
+        val verticalWidth = height * 0.10f   // Plus épais
+        val verticalHeight = height * 0.38f
 
         val positions = mapOf(
-            'a' to SegmentPos(x + width * 0.1f, y + height * 0.02f, segmentWidth, segmentHeight),
-            'b' to SegmentPos(x + width * 0.82f, y + height * 0.08f, verticalWidth, verticalHeight),
+            'a' to SegmentPos(x + width * 0.09f, y + height * 0.02f, segmentWidth, segmentHeight),
+            'b' to SegmentPos(x + width * 0.82f, y + height * 0.10f, verticalWidth, verticalHeight),
             'c' to SegmentPos(x + width * 0.82f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'd' to SegmentPos(x + width * 0.1f, y + height * 0.9f, segmentWidth, segmentHeight),
+            'd' to SegmentPos(x + width * 0.09f, y + height * 0.88f, segmentWidth, segmentHeight),
             'e' to SegmentPos(x + width * 0.02f, y + height * 0.52f, verticalWidth, verticalHeight),
-            'f' to SegmentPos(x + width * 0.02f, y + height * 0.08f, verticalWidth, verticalHeight),
-            'g' to SegmentPos(x + width * 0.1f, y + height * 0.46f, segmentWidth, segmentHeight)
+            'f' to SegmentPos(x + width * 0.02f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'g' to SegmentPos(x + width * 0.09f, y + height * 0.46f, segmentWidth, segmentHeight)
         )
 
         positions.forEach { (seg, pos) ->
@@ -275,9 +277,14 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val path = createSegmentPath(pos)
 
         if (active) {
-            canvas.drawPath(path, glowPaint)
+            // Dessiner d'abord un léger glow derrière (optionnel et très subtil)
+            val glowPath = Path(path)
+            canvas.drawPath(glowPath, glowPaint)
+
+            // Puis dessiner le segment net et clair au-dessus
             canvas.drawPath(path, activePaint)
         } else {
+            // Segments inactifs: nets sans flou
             canvas.drawPath(path, inactivePaint)
         }
     }
@@ -311,25 +318,27 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     }
 
     private fun drawDecimalPoint(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.07f
+        val radius = height * 0.08f
         val centerY = y + height * 0.88f
-        // Glow externe
-        canvas.drawCircle(x, centerY, radius * 2.2f, glowPaint)
-        // Point principal
+
+        // Glow subtil derrière
+        canvas.drawCircle(x, centerY, radius * 1.4f, glowPaint)
+
+        // Point principal net et clair
         canvas.drawCircle(x, centerY, radius, activePaint)
     }
 
     private fun drawColon(canvas: Canvas, x: Float, y: Float, height: Float) {
-        val radius = height * 0.07f
+        val radius = height * 0.08f
         val upperY = y + height * 0.35f
         val lowerY = y + height * 0.65f
 
-        // Point supérieur
-        canvas.drawCircle(x, upperY, radius * 2.2f, glowPaint)
+        // Point supérieur - glow subtil puis point net
+        canvas.drawCircle(x, upperY, radius * 1.4f, glowPaint)
         canvas.drawCircle(x, upperY, radius, activePaint)
 
-        // Point inférieur
-        canvas.drawCircle(x, lowerY, radius * 2.2f, glowPaint)
+        // Point inférieur - glow subtil puis point net
+        canvas.drawCircle(x, lowerY, radius * 1.4f, glowPaint)
         canvas.drawCircle(x, lowerY, radius, activePaint)
     }
 
