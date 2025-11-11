@@ -90,7 +90,7 @@
         <!-- Background ultra réaliste -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:background="@drawable/bg_display_optimized" />
 
         <!-- Contenu -->
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="28dp"
+            android:padding="20dp"
             android:gravity="center">
 
             <TextView
@@ -119,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center">
 
                 <!-- LED GPS Active Ultra Réaliste -->
@@ -147,7 +147,9 @@
                     android:shadowDx="0"
                     android:shadowDy="0"
                     android:shadowRadius="12"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:layout_marginBottom="0dp"
+                    />
 
             </LinearLayout>
 
