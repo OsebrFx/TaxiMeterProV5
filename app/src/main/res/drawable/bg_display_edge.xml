@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer dark frame -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0a0a0a" />
+            <corners android:radius="14dp" />
+            <stroke android:width="3dp" android:color="#1a1a1a" />
+        </shape>
+    </item>
+
+    <!-- Middle border layer -->
+    <item android:top="2dp" android:bottom="2dp" android:left="2dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#121212" />
+            <corners android:radius="12dp" />
+            <stroke android:width="1dp" android:color="#2a2a2a" />
+        </shape>
+    </item>
+
+    <!-- LCD Screen with gradient -->
+    <item android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#030303"
+                android:centerColor="#050505"
+                android:endColor="#000000"
+                android:type="linear" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Top reflection/edge light -->
+    <item
+        android:top="4dp"
+        android:bottom="40dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#0a0a0a"
+                android:endColor="#00000000"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Subtle bottom edge highlight -->
+    <item
+        android:top="80dp"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#00000000"
+                android:endColor="#080808"
+                android:type="linear" />
+            <corners
+                android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp" />
+        </shape>
+    </item>
+
+</layer-list>

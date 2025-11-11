@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer metal bezel -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1a1a1a" />
+            <corners android:radius="16dp" />
+            <stroke android:width="2dp" android:color="#0a0a0a" />
+        </shape>
+    </item>
+
+    <!-- Metal frame with depth -->
+    <item android:top="3dp" android:bottom="3dp" android:left="3dp" android:right="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#2a2a2a" />
+            <corners android:radius="14dp" />
+        </shape>
+    </item>
+
+    <!-- Inner border -->
+    <item android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1a1a1a" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- LCD Screen background -->
+    <item android:top="8dp" android:bottom="8dp" android:left="8dp" android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#050505"
+                android:centerColor="#0a0a0a"
+                android:endColor="#000000"
+                android:type="linear" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Screen reflection (top highlight) -->
+    <item
+        android:top="8dp"
+        android:bottom="40dp"
+        android:left="8dp"
+        android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#0a0a0a"
+                android:endColor="#00000000"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+        </shape>
+    </item>
+
+</layer-list>

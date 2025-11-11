@@ -1,11 +1,15 @@
 package com.taximeter.pro.ui.profil
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.BounceInterpolator
 import androidx.fragment.app.Fragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
@@ -30,6 +34,140 @@ class ProfilFragment : Fragment() {
 
         // Générer le QR code
         generateQRCode()
+
+        // Démarrer les animations
+        startEntryAnimations()
+    }
+
+    private fun startEntryAnimations() {
+        // Animation du header
+        binding.headerProfil.apply {
+            alpha = 0f
+            translationY = -100f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(600)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+        }
+
+        // Animation de la photo de profil avec effet bounce
+        binding.frameProfile.apply {
+            alpha = 0f
+            scaleX = 0f
+            scaleY = 0f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(1000)
+                    .setInterpolator(BounceInterpolator())
+                    .start()
+
+                // Animation de rotation subtile
+                startProfileRotationAnimation(this)
+            }, 200)
+        }
+
+        // Animation du nom
+        binding.tvDriverName.apply {
+            alpha = 0f
+            translationY = 30f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(800)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+
+                // Effet de pulsation
+                startTextPulseAnimation(this)
+            }, 800)
+        }
+
+        // Animation du rôle
+        binding.tvDriverRole.apply {
+            alpha = 0f
+            translationY = 20f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(700)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 1000)
+        }
+
+        // Animation de la card âge
+        binding.cardAge.apply {
+            alpha = 0f
+            translationX = -200f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .translationX(0f)
+                    .setDuration(800)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 1200)
+        }
+
+        // Animation de la card permis
+        binding.cardPermis.apply {
+            alpha = 0f
+            translationX = 200f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .translationX(0f)
+                    .setDuration(800)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 1400)
+        }
+
+        // Animation du QR code
+        binding.cardQr.apply {
+            alpha = 0f
+            scaleX = 0.5f
+            scaleY = 0.5f
+            postDelayed({
+                animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(1000)
+                    .setInterpolator(BounceInterpolator())
+                    .start()
+            }, 1600)
+        }
+    }
+
+    private fun startProfileRotationAnimation(view: View) {
+        val rotationAnimator = ObjectAnimator.ofFloat(view, "rotation", 0f, 3f, 0f, -3f, 0f)
+        rotationAnimator.duration = 3000
+        rotationAnimator.repeatCount = ValueAnimator.INFINITE
+        rotationAnimator.interpolator = AccelerateDecelerateInterpolator()
+        rotationAnimator.start()
+    }
+
+    private fun startTextPulseAnimation(view: View) {
+        val scaleAnimator = ObjectAnimator.ofFloat(view, "scaleX", 1f, 1.05f, 1f)
+        scaleAnimator.duration = 2000
+        scaleAnimator.repeatCount = ValueAnimator.INFINITE
+        scaleAnimator.interpolator = AccelerateDecelerateInterpolator()
+
+        val scaleYAnimator = ObjectAnimator.ofFloat(view, "scaleY", 1f, 1.05f, 1f)
+        scaleYAnimator.duration = 2000
+        scaleYAnimator.repeatCount = ValueAnimator.INFINITE
+        scaleYAnimator.interpolator = AccelerateDecelerateInterpolator()
+
+        scaleAnimator.start()
+        scaleYAnimator.start()
     }
 
     private fun generateQRCode() {

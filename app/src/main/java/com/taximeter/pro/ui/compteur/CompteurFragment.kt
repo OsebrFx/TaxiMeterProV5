@@ -1,11 +1,14 @@
 package com.taximeter.pro.ui.compteur
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -47,36 +50,119 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         setupClickListeners()
         setupHeaderButtons()
         checkLocationPermissions()
+
+        // Animation d’entrée
+        startEntryAnimations()
+    }
+
+    private fun startEntryAnimations() {
+        binding.header.apply {
+            alpha = 0f
+            translationY = -100f
+            animate().alpha(1f).translationY(0f)
+                .setDuration(600)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+        }
+
+        binding.cardFare.apply {
+            alpha = 0f
+            scaleX = 0.8f
+            scaleY = 0.8f
+            postDelayed({
+                animate().alpha(1f).scaleX(1f).scaleY(1f)
+                    .setDuration(800)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 200)
+        }
+
+        binding.containerTimeDistance.apply {
+            alpha = 0f
+            translationY = 50f
+            postDelayed({
+                animate().alpha(1f).translationY(0f)
+                    .setDuration(700)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 400)
+        }
+
+        binding.cardStatus.apply {
+            alpha = 0f
+            translationY = 50f
+            postDelayed({
+                animate().alpha(1f).translationY(0f)
+                    .setDuration(700)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 600)
+        }
+
+        binding.containerButtons.apply {
+            alpha = 0f
+            translationY = 50f
+            postDelayed({
+                animate().alpha(1f).translationY(0f)
+                    .setDuration(700)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }, 800)
+        }
+
+        startLedPulseAnimation(binding.indicatorGps)
+        startLedPulseAnimation(binding.indicatorSystem)
+    }
+
+    private fun startLedPulseAnimation(view: View) {
+        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.3f, 1f)
+        pulseAnimator.duration = 2000
+        pulseAnimator.repeatCount = ValueAnimator.INFINITE
+        pulseAnimator.interpolator = AccelerateDecelerateInterpolator()
+        pulseAnimator.start()
     }
 
     private fun setupSevenSegmentDisplay() {
-        // CORRECTION : Accès aux TextView via binding.root.findViewById
         val digit1 = binding.root.findViewById<TextView>(R.id.digit_1)
         val digit2 = binding.root.findViewById<TextView>(R.id.digit_2)
         val digit3 = binding.root.findViewById<TextView>(R.id.digit_3)
 
         sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
-
-        // Afficher le tarif de base dès le début (2.5 DH)
         sevenSegmentDisplay.setNumber(2.5)
     }
 
     private fun setupHeaderButtons() {
-        // Bouton menu pour ouvrir le drawer
         binding.root.findViewById<View>(R.id.btn_menu)?.setOnClickListener {
+            animateClick(it)
             (activity as? MainActivity)?.openDrawer()
         }
 
-        // Bouton info
         binding.root.findViewById<View>(R.id.btn_info)?.setOnClickListener {
+            animateClick(it)
             showInfoDialog()
         }
+    }
+
+    private fun animateClick(view: View) {
+        view.animate()
+            .scaleX(0.9f)
+            .scaleY(0.9f)
+            .setDuration(100)
+            .withEndAction {
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
     }
 
     private fun showInfoDialog() {
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setTitle("À propos")
-            .setMessage("""
+            .setMessage(
+                """
                 TaxiMeter Pro v1.0
                 
                 Application de compteur de taxi professionnel.
@@ -87,7 +173,8 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 • Prix par minute: 0.5 DH
                 
                 Développé par Salah Eddine
-            """.trimIndent())
+                """.trimIndent()
+            )
             .setPositiveButton("OK", null)
             .create()
 
@@ -96,17 +183,17 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setupObservers() {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
-            sevenSegmentDisplay.setNumber(fare)
+            animateValueChange(fare)
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
-            binding.tvDistance.text = String.format("%.1f", distance)
+            animateTextChange(binding.tvDistance, String.format("%.1f", distance))
         }
 
         viewModel.timeInSeconds.observe(viewLifecycleOwner) { seconds ->
             val minutes = seconds / 60
             val secs = seconds % 60
-            binding.tvTime.text = String.format("%02d:%02d", minutes, secs)
+            animateTextChange(binding.tvTime, String.format("%02d:%02d", minutes, secs))
         }
 
         viewModel.isRunning.observe(viewLifecycleOwner) { isRunning ->
@@ -114,32 +201,100 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    private fun animateValueChange(newValue: Double) {
+        binding.cardFare.animate()
+            .scaleX(1.05f)
+            .scaleY(1.05f)
+            .setDuration(150)
+            .withEndAction {
+                sevenSegmentDisplay.setNumber(newValue)
+                binding.cardFare.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(150)
+                    .start()
+            }
+            .start()
+    }
+
+    private fun animateTextChange(textView: TextView, newText: String) {
+        textView.animate()
+            .scaleX(1.1f)
+            .scaleY(1.1f)
+            .setDuration(100)
+            .withEndAction {
+                textView.text = newText
+                textView.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
+    }
+
     private fun setupClickListeners() {
         binding.btnStart.setOnClickListener {
-            if (viewModel.isRunning.value == true) {
-                viewModel.pauseTrip()
-                stopLocationService()
-            } else {
-                if (hasLocationPermissions()) {
-                    viewModel.startTrip()
-                    startLocationService()
+            animateButtonPress(it) {
+                if (viewModel.isRunning.value == true) {
+                    viewModel.pauseTrip()
+                    stopLocationService()
                 } else {
-                    requestLocationPermissions()
+                    if (hasLocationPermissions()) {
+                        viewModel.startTrip()
+                        startLocationService()
+                    } else {
+                        requestLocationPermissions()
+                    }
                 }
             }
         }
 
         binding.btnReset.setOnClickListener {
-            viewModel.resetTrip()
-            stopLocationService()
-            sevenSegmentDisplay.setNumber(2.5) // Réinitialiser au tarif de base
-            NotificationHelper.showTripEndNotification(
-                requireContext(),
-                viewModel.fare.value ?: 2.5,
-                viewModel.distance.value ?: 0.0,
-                viewModel.timeInSeconds.value ?: 0
-            )
+            animateButtonPress(it) {
+                viewModel.resetTrip()
+                stopLocationService()
+
+                binding.cardFare.animate()
+                    .rotationY(90f)
+                    .setDuration(200)
+                    .withEndAction {
+                        sevenSegmentDisplay.setNumber(2.5)
+                        binding.cardFare.rotationY = -90f
+                        binding.cardFare.animate()
+                            .rotationY(0f)
+                            .setDuration(200)
+                            .start()
+                    }
+                    .start()
+
+                NotificationHelper.showTripEndNotification(
+                    requireContext(),
+                    viewModel.fare.value ?: 2.5,
+                    viewModel.distance.value ?: 0.0,
+                    viewModel.timeInSeconds.value ?: 0
+                )
+            }
         }
+    }
+
+    // ✅ Version corrigée sans doOnEnd
+    private fun animateButtonPress(button: View, action: () -> Unit) {
+        button.animate()
+            .scaleX(0.95f)
+            .scaleY(0.95f)
+            .setDuration(100)
+            .withEndAction {
+                button.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .withEndAction {
+                        action()
+                    }
+                    .start()
+            }
+            .start()
     }
 
     private fun updateUIForRunningState(isRunning: Boolean) {
@@ -147,6 +302,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             binding.btnStart.text = "PAUSE"
             binding.btnStart.setIconResource(R.drawable.ic_pause)
             binding.indicatorActif.setBackgroundResource(R.drawable.indicator_active)
+            startLedPulseAnimation(binding.indicatorActif)
         } else {
             binding.btnStart.text = "DÉMARRER"
             binding.btnStart.setIconResource(R.drawable.ic_play)
@@ -173,9 +329,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun checkLocationPermissions() {
-        if (!hasLocationPermissions()) {
-            requestLocationPermissions()
-        }
+        if (!hasLocationPermissions()) requestLocationPermissions()
     }
 
     private fun startLocationService() {
@@ -190,13 +344,8 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        // Permissions accordées
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        // Permissions refusées
-    }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {}
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

@@ -5,408 +5,630 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@android:color/black"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
-        <!-- Header -->
-        <LinearLayout
+        <!-- Header avec effet métallique -->
+        <FrameLayout
             android:id="@+id/header"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_header"
-            android:padding="12dp"
-            android:gravity="center_vertical"
+            android:layout_height="80dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageView
-                android:id="@+id/btn_menu"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_menu"
-                android:contentDescription="@string/menu"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/black" />
+            <!-- Gradient métallique de fond -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_header" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/app_name"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:gravity="center" />
+            <!-- Effet de brillance -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:alpha="0.15" />
 
-            <ImageView
-                android:id="@+id/btn_info"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_info"
-                android:contentDescription="@string/info"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/btn_menu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_menu"
+                    android:contentDescription="@string/menu"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@color/black" />
 
-        <!-- Montant Total Label -->
-        <TextView
-            android:id="@+id/tv_label_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/montant_total"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:letterSpacing="0.2"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/header"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/app_name"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:letterSpacing="0.15"
+                    android:shadowColor="#40000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="3" />
 
-        <!-- Main Fare Display avec affichage 7 segments réaliste -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_fare"
+                <ImageView
+                    android:id="@+id/btn_info"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_info"
+                    android:contentDescription="@string/info"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- Container principal avec padding -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardElevation="0dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_label_total"
+            android:padding="24dp"
+            app:layout_constraintTop_toBottomOf="@id/header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <FrameLayout
-                android:layout_width="match_parent"
+            <!-- Label "MONTANT TOTAL" avec effet néon -->
+            <TextView
+                android:id="@+id/tv_label_total"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_display_realistic">
+                android:text="@string/montant_total"
+                android:textColor="#FFD700"
+                android:textSize="14sp"
+                android:letterSpacing="0.3"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:shadowColor="#FFD700"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="8"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Display principal ultra réaliste -->
+            <FrameLayout
+                android:id="@+id/card_fare"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_total"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Bordure externe métallique avec ombres -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="#2a2a2a"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="24dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="6dp">
+
+                        <!-- Bordure intérieure -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="#1a1a1a"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="4dp">
+
+                                <!-- Écran LCD avec gradient -->
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/bg_display_realistic" />
+
+                                <!-- Reflet réaliste sur l'écran -->
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="60dp"
+                                    android:background="@android:drawable/dialog_holo_light_frame"
+                                    android:alpha="0.08" />
+
+                                <!-- Contenu de l'affichage -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="center"
+                                    android:padding="20dp">
+
+                                    <!-- Seven Segment Display -->
+                                    <include
+                                        android:id="@+id/seven_segment_fare"
+                                        layout="@layout/seven_segment_display_large"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1" />
+
+                                    <!-- Unité "DH" avec effet LED -->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="dh"
+                                        android:textColor="#FF0000"
+                                        android:textSize="36sp"
+                                        android:fontFamily="monospace"
+                                        android:textStyle="bold"
+                                        android:layout_marginStart="16dp"
+                                        android:shadowColor="#FF0000"
+                                        android:shadowDx="0"
+                                        android:shadowDy="0"
+                                        android:shadowRadius="12" />
+
+                                </LinearLayout>
+
+                            </FrameLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </FrameLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
+
+            <!-- Container Temps et Distance -->
+            <LinearLayout
+                android:id="@+id/container_time_distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/card_fare"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Affichage du Temps -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/temps"
+                        android:textColor="#FFD700"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.2"
+                        android:gravity="center"
+                        android:shadowColor="#FFD700"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="6"
+                        android:layout_marginBottom="10dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        app:cardBackgroundColor="#2a2a2a"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="16dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="4dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#1a1a1a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="0dp">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="3dp">
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/bg_display_realistic" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:gravity="center"
+                                        android:padding="16dp">
+
+                                        <TextView
+                                            android:id="@+id/tv_time"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="00:00"
+                                            android:textColor="#FF0000"
+                                            android:textSize="42sp"
+                                            android:fontFamily="monospace"
+                                            android:textStyle="bold"
+                                            android:shadowColor="#FF0000"
+                                            android:shadowDx="0"
+                                            android:shadowDy="0"
+                                            android:shadowRadius="10"
+                                            tools:text="00:21" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/mm_ss"
+                                            android:textColor="#FFD700"
+                                            android:textSize="11sp"
+                                            android:textStyle="bold"
+                                            android:layout_marginTop="6dp"
+                                            android:shadowColor="#FFD700"
+                                            android:shadowDx="0"
+                                            android:shadowDy="0"
+                                            android:shadowRadius="4" />
+
+                                    </LinearLayout>
+
+                                </FrameLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                        </FrameLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <!-- Affichage de la Distance -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/distance"
+                        android:textColor="#FFD700"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.2"
+                        android:gravity="center"
+                        android:shadowColor="#FFD700"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="6"
+                        android:layout_marginBottom="10dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        app:cardBackgroundColor="#2a2a2a"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="16dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="4dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                app:cardBackgroundColor="#1a1a1a"
+                                app:cardCornerRadius="12dp"
+                                app:cardElevation="0dp">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="3dp">
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/bg_display_realistic" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:gravity="center"
+                                        android:padding="16dp">
+
+                                        <TextView
+                                            android:id="@+id/tv_distance"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="0.0"
+                                            android:textColor="#FF0000"
+                                            android:textSize="42sp"
+                                            android:fontFamily="monospace"
+                                            android:textStyle="bold"
+                                            android:shadowColor="#FF0000"
+                                            android:shadowDx="0"
+                                            android:shadowDy="0"
+                                            android:shadowRadius="10"
+                                            tools:text="12.5" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/km"
+                                            android:textColor="#FFD700"
+                                            android:textSize="11sp"
+                                            android:textStyle="bold"
+                                            android:layout_marginTop="6dp"
+                                            android:shadowColor="#FFD700"
+                                            android:shadowDx="0"
+                                            android:shadowDy="0"
+                                            android:shadowRadius="4" />
+
+                                    </LinearLayout>
+
+                                </FrameLayout>
+
+                            </androidx.cardview.widget.CardView>
+
+                        </FrameLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Indicateurs de statut avec LED réalistes -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="#1a1a1a"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="12dp"
+                app:layout_constraintTop_toBottomOf="@id/container_time_distance"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="24dp"
+                    android:padding="20dp"
                     android:gravity="center">
 
-                    <!-- Seven Segment Display Container -->
-                    <include
-                        android:id="@+id/seven_segment_fare"
-                        layout="@layout/seven_segment_display_large"
+                    <!-- Actif Indicator -->
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="24dp"
+                            android:layout_height="24dp">
+
+                            <!-- Effet de glow autour du LED -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/indicator_inactive"
+                                android:alpha="0.3" />
+
+                            <View
+                                android:id="@+id/indicator_actif"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/indicator_inactive" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/actif"
+                            android:textColor="#888888"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp" />
+
+                    </LinearLayout>
+
+                    <!-- GPS Indicator -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="dh"
-                        android:textColor="@color/segment_red"
-                        android:textSize="28sp"
-                        android:fontFamily="monospace"
-                        android:textStyle="bold"
-                        android:layout_marginStart="12dp"
-                        android:shadowColor="@color/segment_red_glow"
-                        android:shadowDx="0"
-                        android:shadowDy="0"
-                        android:shadowRadius="6" />
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <FrameLayout
+                            android:layout_width="24dp"
+                            android:layout_height="24dp">
+
+                            <!-- Effet de glow autour du LED -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/indicator_active_green"
+                                android:alpha="0.4" />
+
+                            <View
+                                android:id="@+id/indicator_gps"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/indicator_active_green" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/gps"
+                            android:textColor="#22c55e"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"
+                            android:shadowColor="#22c55e"
+                            android:shadowDx="0"
+                            android:shadowDy="0"
+                            android:shadowRadius="4" />
+
+                    </LinearLayout>
+
+                    <!-- Système Indicator -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <FrameLayout
+                            android:layout_width="24dp"
+                            android:layout_height="24dp">
+
+                            <!-- Effet de glow autour du LED -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/indicator_active_green"
+                                android:alpha="0.4" />
+
+                            <View
+                                android:id="@+id/indicator_system"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/indicator_active_green" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/systeme"
+                            android:textColor="#22c55e"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"
+                            android:shadowColor="#22c55e"
+                            android:shadowDx="0"
+                            android:shadowDy="0"
+                            android:shadowRadius="4" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Time and Distance Container -->
-        <LinearLayout
-            android:id="@+id/container_time_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/card_fare"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <!-- Time Display -->
+            <!-- Boutons de contrôle ultra réalistes -->
             <LinearLayout
+                android:id="@+id/container_buttons"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/temps"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.2"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_display_realistic">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/tv_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="00:00"
-                            android:textColor="@color/segment_red"
-                            android:textSize="36sp"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
-                            android:shadowColor="@color/segment_red_glow"
-                            android:shadowDx="0"
-                            android:shadowDy="0"
-                            android:shadowRadius="6"
-                            tools:text="00:21" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mm_ss"
-                            android:textColor="@color/taxi_yellow"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-            <!-- Distance Display -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/distance"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.2"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_display_realistic">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/tv_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0.0"
-                            android:textColor="@color/segment_red"
-                            android:textSize="36sp"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
-                            android:shadowColor="@color/segment_red_glow"
-                            android:shadowDx="0"
-                            android:shadowDy="0"
-                            android:shadowRadius="6"
-                            tools:text="12.5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/km"
-                            android:textColor="@color/taxi_yellow"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Status Indicators -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_status"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/card_bg"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/container_time_distance"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center">
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/card_status"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Actif Indicator -->
-                <LinearLayout
+                <!-- Bouton START avec effet 3D -->
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:layout_marginEnd="16dp">
 
-                    <View
-                        android:id="@+id/indicator_actif"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:background="@drawable/indicator_inactive" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/actif"
-                        android:textColor="@color/text_gray"
-                        android:textSize="11sp"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:text="@string/demarrer"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
+                        android:background="@drawable/bg_button_selector"
+                        android:elevation="16dp"
+                        android:stateListAnimator="@null"
+                        app:icon="@drawable/ic_play"
+                        app:iconTint="@color/black"
+                        app:iconSize="28dp"
+                        app:iconGravity="textStart" />
 
-                </LinearLayout>
+                </FrameLayout>
 
-                <!-- GPS Indicator -->
-                <LinearLayout
+                <!-- Bouton RESET avec effet 3D -->
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:layout_marginStart="16dp">
 
-                    <View
-                        android:id="@+id/indicator_gps"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:background="@drawable/indicator_active_green" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/gps"
-                        android:textColor="@color/text_gray"
-                        android:textSize="11sp"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_reset"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:text="@string/reinitialiser"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
+                        android:background="@drawable/bg_button_selector"
+                        android:elevation="16dp"
+                        android:stateListAnimator="@null"
+                        app:icon="@drawable/ic_reset"
+                        app:iconTint="@color/black"
+                        app:iconSize="28dp"
+                        app:iconGravity="textStart" />
 
-                </LinearLayout>
-
-                <!-- Système Indicator -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <View
-                        android:id="@+id/indicator_system"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:background="@drawable/indicator_active_green" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/systeme"
-                        android:textColor="@color/text_gray"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp" />
-
-                </LinearLayout>
+                </FrameLayout>
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Control Buttons avec design réaliste -->
-        <LinearLayout
-            android:id="@+id/container_buttons"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="28dp"
-            app:layout_constraintTop_toBottomOf="@id/card_status"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_start"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="12dp"
-                android:text="@string/demarrer"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_button_selector"
-                android:elevation="8dp"
-                app:icon="@drawable/ic_play"
-                app:iconTint="@color/black"
-                app:iconSize="24dp"
-                app:iconGravity="textStart" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_reset"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:text="@string/reinitialiser"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_button_selector"
-                android:elevation="8dp"
-                app:icon="@drawable/ic_reset"
-                app:iconTint="@color/black"
-                app:iconSize="24dp"
-                app:iconGravity="textStart" />
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
