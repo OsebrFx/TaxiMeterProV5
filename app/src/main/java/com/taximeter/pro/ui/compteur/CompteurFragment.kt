@@ -327,6 +327,11 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     )
                 } else {
                     if (hasLocationPermissions()) {
+                        // Démarrer la boot sequence 8K ultra réaliste sur tous les displays
+                        sevenSegmentMoney.startBootSequence()
+                        sevenSegmentTime.startBootSequence()
+                        sevenSegmentDistance.startBootSequence()
+
                         viewModel.startTrip()
                         startLocationService()
                     } else {

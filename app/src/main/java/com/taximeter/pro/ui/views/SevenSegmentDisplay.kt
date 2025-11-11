@@ -7,10 +7,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.content.res.ResourcesCompat
 import com.taximeter.pro.R
 import java.util.Locale
 import kotlin.math.min
+import kotlin.math.sin
 
 /**
  * Vue 7-segments 8K ultra réaliste avec effet odomètre
@@ -32,6 +34,14 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     private var currentValue: Double = 0.0
     private var targetValue: Double = 0.0
     private var animator: ValueAnimator? = null
+
+    // Animations 8K ultra réalistes
+    private var glowAnimator: ValueAnimator? = null
+    private var glowIntensity: Float = 1.0f
+    private var bootSequenceProgress: Float = 1.0f  // 0.0 = boot en cours, 1.0 = terminé
+    private var scanLinePosition: Float = 0f
+    private var scanLineAnimator: ValueAnimator? = null
+    private var isBooting = false
 
     // Couleurs LED ultra réalistes - 8K Ultra Sharp
     private val activeColor = Color.parseColor("#FF0000")      // Rouge vif éclatant
@@ -90,6 +100,77 @@ class SevenSegmentDisplay @JvmOverloads constructor(
 
             typedArray.recycle()
         }
+
+        // Démarrer les animations 8K ultra réalistes automatiquement
+        startGlowAnimation()
+        startScanLineAnimation()
+    }
+
+    /**
+     * Animation GLOW PULSANT 8K - Effet LED ultra réaliste
+     */
+    private fun startGlowAnimation() {
+        glowAnimator?.cancel()
+        glowAnimator = ValueAnimator.ofFloat(0.7f, 1.0f).apply {
+            duration = 1500  // Pulsation lente et hypnotique
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.REVERSE
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener { animation ->
+                glowIntensity = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    /**
+     * Animation SCAN LINE - Lignes de balayage LCD vintage 8K
+     */
+    private fun startScanLineAnimation() {
+        scanLineAnimator?.cancel()
+        scanLineAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 3000  // Balayage lent et subtil
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
+            interpolator = LinearInterpolator()
+            addUpdateListener { animation ->
+                scanLinePosition = animation.animatedValue as Float
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    /**
+     * BOOT SEQUENCE - Animation de démarrage comme vrais displays LCD
+     */
+    fun startBootSequence() {
+        isBooting = true
+        bootSequenceProgress = 0f
+
+        ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 2000  // 2 secondes de boot
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener { animation ->
+                bootSequenceProgress = animation.animatedValue as Float
+                invalidate()
+            }
+            addListener(object : android.animation.Animator.AnimatorListener {
+                override fun onAnimationStart(animation: android.animation.Animator) {}
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    isBooting = false
+                    bootSequenceProgress = 1f
+                    invalidate()
+                }
+                override fun onAnimationCancel(animation: android.animation.Animator) {
+                    isBooting = false
+                    bootSequenceProgress = 1f
+                }
+                override fun onAnimationRepeat(animation: android.animation.Animator) {}
+            })
+            start()
+        }
     }
 
     private fun parseValue(valueStr: String): Double {
@@ -106,7 +187,7 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     }
 
     /**
-     * Définit la valeur avec animation odomètre - effet de roulement mécanique
+     * Définit la valeur avec animation odomètre AMÉLIORÉE - effet mécanique ultra réaliste
      */
     fun setValue(value: Double, animate: Boolean = true) {
         targetValue = value
@@ -114,10 +195,10 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         if (animate) {
             animator?.cancel()
             animator = ValueAnimator.ofFloat(currentValue.toFloat(), targetValue.toFloat()).apply {
-                // Duration plus longue pour effet odométrique visible
-                duration = 1200
-                // AccelerateDecelerateInterpolator pour effet mécanique réaliste
-                interpolator = AccelerateDecelerateInterpolator()
+                // Duration plus longue pour effet odométrique bien visible
+                duration = 1800
+                // OvershootInterpolator pour effet mécanique réaliste avec léger rebond
+                interpolator = OvershootInterpolator(0.5f)
                 addUpdateListener { animation ->
                     currentValue = (animation.animatedValue as Float).toDouble()
                     invalidate()
@@ -152,6 +233,12 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        // ========== EFFET BOOT SEQUENCE ==========
+        if (isBooting && bootSequenceProgress < 1f) {
+            drawBootSequence(canvas)
+            return
+        }
+
         // Charger la police 7-segment personnalisée
         val customTypeface = try {
             ResourcesCompat.getFont(context, R.font.font_dig)
@@ -176,23 +263,28 @@ class SevenSegmentDisplay @JvmOverloads constructor(
             }
         }
 
-        // Paint pour le texte style digital avec police 7-segment
+        // Calculer la taille de texte optimale pour qu'il reste dans les limites
+        val availableWidth = width - paddingLeft - paddingRight - 40f
+        val availableHeight = height - paddingTop - paddingBottom - 20f
+
+        var testSize = availableHeight * 0.6f
+
+        // ========== PAINT PRINCIPAL avec GLOW PULSANT 8K ==========
         val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = activeColor
+            // Couleur dynamique avec pulsation
+            val glowedColor = Color.rgb(
+                (Color.red(activeColor) * glowIntensity).toInt(),
+                (Color.green(activeColor) * glowIntensity).toInt(),
+                (Color.blue(activeColor) * glowIntensity).toInt()
+            )
+            color = glowedColor
             typeface = customTypeface
             textAlign = Paint.Align.CENTER
-            letterSpacing = 0.1f  // Espacement réduit pour éviter débordement
+            letterSpacing = 0.1f
+            textSize = testSize
         }
 
-        // Calculer la taille de texte optimale pour qu'il reste dans les limites
-        val availableWidth = width - paddingLeft - paddingRight - 40f  // Marge de sécurité
-        val availableHeight = height - paddingTop - paddingBottom - 20f // Marge de sécurité
-
-        // Commencer avec une taille basée sur la hauteur
-        var testSize = availableHeight * 0.6f
-        textPaint.textSize = testSize
-
-        // Mesurer la largeur du texte et ajuster si nécessaire
+        // Ajuster la taille pour rester dans les limites
         var textWidth = textPaint.measureText(text)
         while (textWidth > availableWidth && testSize > 10f) {
             testSize -= 2f
@@ -200,11 +292,77 @@ class SevenSegmentDisplay @JvmOverloads constructor(
             textWidth = textPaint.measureText(text)
         }
 
-        // Centrer le texte verticalement et horizontalement
         val x = width / 2f
         val y = height / 2f + (textPaint.textSize / 3f)
 
+        // ========== EFFET OMBRE 3D pour profondeur 8K ==========
+        val shadowPaint = Paint(textPaint).apply {
+            color = Color.parseColor("#330000")  // Ombre rouge très sombre
+            maskFilter = BlurMaskFilter(8f, BlurMaskFilter.Blur.NORMAL)
+        }
+        canvas.drawText(text, x + 4f, y + 4f, shadowPaint)
+
+        // ========== EFFET GLOW EXTERNE ultra réaliste ==========
+        val outerGlowPaint = Paint(textPaint).apply {
+            color = Color.parseColor("#FF0000")
+            alpha = (80 * glowIntensity).toInt()  // Alpha pulsant
+            maskFilter = BlurMaskFilter(15f, BlurMaskFilter.Blur.NORMAL)
+        }
+        canvas.drawText(text, x, y, outerGlowPaint)
+
+        // ========== TEXTE PRINCIPAL ==========
         canvas.drawText(text, x, y, textPaint)
+
+        // ========== SCAN LINES effet LCD vintage 8K ==========
+        drawScanLines(canvas)
+    }
+
+    /**
+     * Dessine l'animation de BOOT SEQUENCE comme vrais displays LCD
+     */
+    private fun drawBootSequence(canvas: Canvas) {
+        // Fond noir
+        canvas.drawColor(Color.parseColor("#000000"))
+
+        // Tous les segments s'allument progressivement
+        val bootPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = activeColor
+            alpha = (255 * bootSequenceProgress).toInt()
+            textSize = (height * 0.4f)
+            typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+        }
+
+        // Afficher "8.8.8.8" style test de display
+        val bootText = when (displayType) {
+            DisplayType.MONEY -> "88.88 DH"
+            DisplayType.TIME -> "88:88"
+            DisplayType.DISTANCE -> "88.88"
+        }
+
+        canvas.drawText(bootText, width / 2f, height / 2f, bootPaint)
+    }
+
+    /**
+     * Dessine les SCAN LINES pour effet LCD vintage ultra réaliste
+     */
+    private fun drawScanLines(canvas: Canvas) {
+        val scanPaint = Paint().apply {
+            color = Color.parseColor("#FF0000")
+            alpha = 15  // Très subtil
+            strokeWidth = 2f
+            style = Paint.Style.STROKE
+        }
+
+        // Ligne de balayage qui se déplace
+        val lineY = height * scanLinePosition
+        canvas.drawLine(0f, lineY, width.toFloat(), lineY, scanPaint)
+
+        // Lignes horizontales fixes pour effet CRT
+        for (i in 0 until height step 4) {
+            scanPaint.alpha = 8
+            canvas.drawLine(0f, i.toFloat(), width.toFloat(), i.toFloat(), scanPaint)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -229,5 +387,13 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         }
 
         setMeasuredDimension(width, height)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        // Nettoyer toutes les animations pour éviter les fuites mémoire
+        animator?.cancel()
+        glowAnimator?.cancel()
+        scanLineAnimator?.cancel()
     }
 }
