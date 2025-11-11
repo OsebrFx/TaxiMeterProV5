@@ -160,15 +160,6 @@ class SevenSegmentDisplay @JvmOverloads constructor(
             Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
         }
 
-        // Paint pour le texte style digital avec police 7-segment
-        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = activeColor
-            textSize = (height - paddingTop - paddingBottom) * 0.7f
-            typeface = customTypeface
-            textAlign = Paint.Align.CENTER
-            letterSpacing = 0.15f  // Espacement optimal pour police 7-segment
-        }
-
         val text = when (displayType) {
             DisplayType.MONEY -> {
                 val formatted = String.format(Locale.US, "%.2f", currentValue)
@@ -183,6 +174,30 @@ class SevenSegmentDisplay @JvmOverloads constructor(
             DisplayType.DISTANCE -> {
                 String.format(Locale.US, "%.2f", currentValue)
             }
+        }
+
+        // Paint pour le texte style digital avec police 7-segment
+        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = activeColor
+            typeface = customTypeface
+            textAlign = Paint.Align.CENTER
+            letterSpacing = 0.1f  // Espacement réduit pour éviter débordement
+        }
+
+        // Calculer la taille de texte optimale pour qu'il reste dans les limites
+        val availableWidth = width - paddingLeft - paddingRight - 40f  // Marge de sécurité
+        val availableHeight = height - paddingTop - paddingBottom - 20f // Marge de sécurité
+
+        // Commencer avec une taille basée sur la hauteur
+        var testSize = availableHeight * 0.6f
+        textPaint.textSize = testSize
+
+        // Mesurer la largeur du texte et ajuster si nécessaire
+        var textWidth = textPaint.measureText(text)
+        while (textWidth > availableWidth && testSize > 10f) {
+            testSize -= 2f
+            textPaint.textSize = testSize
+            textWidth = textPaint.measureText(text)
         }
 
         // Centrer le texte verticalement et horizontalement
