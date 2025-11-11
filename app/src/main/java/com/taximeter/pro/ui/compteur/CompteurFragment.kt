@@ -51,8 +51,8 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         setupHeaderButtons()
         checkLocationPermissions()
 
-        // Animation d’entrée
         startEntryAnimations()
+        startContinuousLedAnimations()
     }
 
     private fun startEntryAnimations() {
@@ -109,14 +109,19 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     .start()
             }, 800)
         }
+    }
 
+    private fun startContinuousLedAnimations() {
+        // Animation continue pour LED GPS
         startLedPulseAnimation(binding.indicatorGps)
+
+        // Animation continue pour LED Système
         startLedPulseAnimation(binding.indicatorSystem)
     }
 
     private fun startLedPulseAnimation(view: View) {
-        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.3f, 1f)
-        pulseAnimator.duration = 2000
+        val pulseAnimator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0.5f, 1f)
+        pulseAnimator.duration = 1500
         pulseAnimator.repeatCount = ValueAnimator.INFINITE
         pulseAnimator.interpolator = AccelerateDecelerateInterpolator()
         pulseAnimator.start()
@@ -183,11 +188,12 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setupObservers() {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
-            animateValueChange(fare)
+            sevenSegmentDisplay.setNumber(fare)
+            animateDisplayFlash(binding.cardFare)
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
-            animateTextChange(binding.tvDistance, String.format("%.1f", distance))
+            animateTextChangeWithOdometer(binding.tvDistance, distance)
         }
 
         viewModel.timeInSeconds.observe(viewLifecycleOwner) { seconds ->
@@ -201,17 +207,44 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun animateValueChange(newValue: Double) {
-        binding.cardFare.animate()
-            .scaleX(1.05f)
-            .scaleY(1.05f)
-            .setDuration(150)
+    private fun animateDisplayFlash(view: View) {
+        view.animate()
+            .scaleX(1.03f)
+            .scaleY(1.03f)
+            .setDuration(100)
             .withEndAction {
-                sevenSegmentDisplay.setNumber(newValue)
-                binding.cardFare.animate()
+                view.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(150)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
+    }
+
+    private fun animateTextChangeWithOdometer(textView: TextView, newValue: Double) {
+        val currentValue = textView.text.toString().toDoubleOrNull() ?: 0.0
+
+        ValueAnimator.ofFloat(currentValue.toFloat(), newValue.toFloat()).apply {
+            duration = 400
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener { animation ->
+                val value = animation.animatedValue as Float
+                textView.text = String.format("%.1f", value)
+            }
+            start()
+        }
+
+        // Flash effect
+        textView.animate()
+            .scaleX(1.08f)
+            .scaleY(1.08f)
+            .setDuration(80)
+            .withEndAction {
+                textView.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(80)
                     .start()
             }
             .start()
@@ -219,15 +252,15 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun animateTextChange(textView: TextView, newText: String) {
         textView.animate()
-            .scaleX(1.1f)
-            .scaleY(1.1f)
-            .setDuration(100)
+            .scaleX(1.08f)
+            .scaleY(1.08f)
+            .setDuration(80)
             .withEndAction {
                 textView.text = newText
                 textView.animate()
                     .scaleX(1f)
                     .scaleY(1f)
-                    .setDuration(100)
+                    .setDuration(80)
                     .start()
             }
             .start()
@@ -255,11 +288,12 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 viewModel.resetTrip()
                 stopLocationService()
 
+                // Animation de rotation 3D
                 binding.cardFare.animate()
                     .rotationY(90f)
                     .setDuration(200)
                     .withEndAction {
-                        sevenSegmentDisplay.setNumber(2.5)
+                        sevenSegmentDisplay.reset()
                         binding.cardFare.rotationY = -90f
                         binding.cardFare.animate()
                             .rotationY(0f)
@@ -278,7 +312,6 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    // ✅ Version corrigée sans doOnEnd
     private fun animateButtonPress(button: View, action: () -> Unit) {
         button.animate()
             .scaleX(0.95f)
@@ -301,7 +334,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if (isRunning) {
             binding.btnStart.text = "PAUSE"
             binding.btnStart.setIconResource(R.drawable.ic_pause)
-            binding.indicatorActif.setBackgroundResource(R.drawable.indicator_active)
+            binding.indicatorActif.setBackgroundResource(R.drawable.led_indicator_active)
             startLedPulseAnimation(binding.indicatorActif)
         } else {
             binding.btnStart.text = "DÉMARRER"

@@ -21,13 +21,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Gradient métallique de fond -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_header" />
 
-            <!-- Effet de brillance -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -85,7 +83,7 @@
 
         </FrameLayout>
 
-        <!-- Container principal avec padding -->
+        <!-- Container principal -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -94,7 +92,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Label "MONTANT TOTAL" avec effet néon -->
+            <!-- Label MONTANT TOTAL -->
             <TextView
                 android:id="@+id/tv_label_total"
                 android:layout_width="wrap_content"
@@ -108,100 +106,68 @@
                 android:shadowColor="#FFD700"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="8"
+                android:shadowRadius="10"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Display principal ultra réaliste -->
+            <!-- Display principal 7-segment ultra réaliste -->
             <FrameLayout
                 android:id="@+id/card_fare"
                 android:layout_width="0dp"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_label_total"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Bordure externe métallique avec ombres -->
-                <androidx.cardview.widget.CardView
+                <!-- Utilisation du nouveau background 7-segment -->
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:cardBackgroundColor="#2a2a2a"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="24dp">
+                    android:background="@drawable/bg_display_7segment"
+                    android:elevation="24dp" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="6dp">
+                <!-- Grille de pixels éteints (effet LCD) -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="14dp"
+                    android:background="#05FF0000"
+                    android:alpha="0.3" />
 
-                        <!-- Bordure intérieure -->
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:cardBackgroundColor="#1a1a1a"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp">
+                <!-- Contenu -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="24dp">
 
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_margin="4dp">
+                    <!-- Display 7-segment -->
+                    <include
+                        android:id="@+id/seven_segment_fare"
+                        layout="@layout/seven_segment_display_large"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                                <!-- Écran LCD avec gradient -->
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/bg_display_realistic" />
+                    <!-- Unité DH -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="dh"
+                        android:textColor="#FF0000"
+                        android:textSize="40sp"
+                        android:fontFamily="monospace"
+                        android:textStyle="bold"
+                        android:layout_marginStart="20dp"
+                        android:shadowColor="#FF0000"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="16" />
 
-                                <!-- Reflet réaliste sur l'écran -->
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="60dp"
-                                    android:background="@android:drawable/dialog_holo_light_frame"
-                                    android:alpha="0.08" />
-
-                                <!-- Contenu de l'affichage -->
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="horizontal"
-                                    android:gravity="center"
-                                    android:padding="20dp">
-
-                                    <!-- Seven Segment Display -->
-                                    <include
-                                        android:id="@+id/seven_segment_fare"
-                                        layout="@layout/seven_segment_display_large"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1" />
-
-                                    <!-- Unité "DH" avec effet LED -->
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="dh"
-                                        android:textColor="#FF0000"
-                                        android:textSize="36sp"
-                                        android:fontFamily="monospace"
-                                        android:textStyle="bold"
-                                        android:layout_marginStart="16dp"
-                                        android:shadowColor="#FF0000"
-                                        android:shadowDx="0"
-                                        android:shadowDy="0"
-                                        android:shadowRadius="12" />
-
-                                </LinearLayout>
-
-                            </FrameLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </FrameLayout>
-
-                </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
             </FrameLayout>
 
@@ -216,7 +182,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Affichage du Temps -->
+                <!-- Display TEMPS -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -236,86 +202,69 @@
                         android:shadowColor="#FFD700"
                         android:shadowDx="0"
                         android:shadowDy="0"
-                        android:shadowRadius="6"
+                        android:shadowRadius="8"
                         android:layout_marginBottom="10dp" />
 
-                    <androidx.cardview.widget.CardView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        app:cardBackgroundColor="#2a2a2a"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="16dp">
+                        android:layout_height="140dp">
 
-                        <FrameLayout
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="4dp">
+                            android:background="@drawable/bg_display_7segment"
+                            android:elevation="16dp" />
 
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                app:cardBackgroundColor="#1a1a1a"
-                                app:cardCornerRadius="12dp"
-                                app:cardElevation="0dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="14dp"
+                            android:background="#05FF0000"
+                            android:alpha="0.3" />
 
-                                <FrameLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_margin="3dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="20dp">
 
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/bg_display_realistic" />
+                            <TextView
+                                android:id="@+id/tv_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="00:00"
+                                android:textColor="#FF0000"
+                                android:textSize="48sp"
+                                android:fontFamily="monospace"
+                                android:textStyle="bold"
+                                android:shadowColor="#FF0000"
+                                android:shadowDx="0"
+                                android:shadowDy="0"
+                                android:shadowRadius="14"
+                                android:letterSpacing="0.15"
+                                tools:text="00:21" />
 
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical"
-                                        android:gravity="center"
-                                        android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mm_ss"
+                                android:textColor="#FFD700"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:shadowColor="#FFD700"
+                                android:shadowDx="0"
+                                android:shadowDy="0"
+                                android:shadowRadius="6" />
 
-                                        <TextView
-                                            android:id="@+id/tv_time"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="00:00"
-                                            android:textColor="#FF0000"
-                                            android:textSize="42sp"
-                                            android:fontFamily="monospace"
-                                            android:textStyle="bold"
-                                            android:shadowColor="#FF0000"
-                                            android:shadowDx="0"
-                                            android:shadowDy="0"
-                                            android:shadowRadius="10"
-                                            tools:text="00:21" />
+                        </LinearLayout>
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/mm_ss"
-                                            android:textColor="#FFD700"
-                                            android:textSize="11sp"
-                                            android:textStyle="bold"
-                                            android:layout_marginTop="6dp"
-                                            android:shadowColor="#FFD700"
-                                            android:shadowDx="0"
-                                            android:shadowDy="0"
-                                            android:shadowRadius="4" />
-
-                                    </LinearLayout>
-
-                                </FrameLayout>
-
-                            </androidx.cardview.widget.CardView>
-
-                        </FrameLayout>
-
-                    </androidx.cardview.widget.CardView>
+                    </FrameLayout>
 
                 </LinearLayout>
 
-                <!-- Affichage de la Distance -->
+                <!-- Display DISTANCE -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -335,96 +284,79 @@
                         android:shadowColor="#FFD700"
                         android:shadowDx="0"
                         android:shadowDy="0"
-                        android:shadowRadius="6"
+                        android:shadowRadius="8"
                         android:layout_marginBottom="10dp" />
 
-                    <androidx.cardview.widget.CardView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        app:cardBackgroundColor="#2a2a2a"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="16dp">
+                        android:layout_height="140dp">
 
-                        <FrameLayout
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="4dp">
+                            android:background="@drawable/bg_display_7segment"
+                            android:elevation="16dp" />
 
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                app:cardBackgroundColor="#1a1a1a"
-                                app:cardCornerRadius="12dp"
-                                app:cardElevation="0dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="14dp"
+                            android:background="#05FF0000"
+                            android:alpha="0.3" />
 
-                                <FrameLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_margin="3dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="20dp">
 
-                                    <View
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/bg_display_realistic" />
+                            <TextView
+                                android:id="@+id/tv_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0.0"
+                                android:textColor="#FF0000"
+                                android:textSize="48sp"
+                                android:fontFamily="monospace"
+                                android:textStyle="bold"
+                                android:shadowColor="#FF0000"
+                                android:shadowDx="0"
+                                android:shadowDy="0"
+                                android:shadowRadius="14"
+                                android:letterSpacing="0.15"
+                                tools:text="12.5" />
 
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical"
-                                        android:gravity="center"
-                                        android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/km"
+                                android:textColor="#FFD700"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp"
+                                android:shadowColor="#FFD700"
+                                android:shadowDx="0"
+                                android:shadowDy="0"
+                                android:shadowRadius="6" />
 
-                                        <TextView
-                                            android:id="@+id/tv_distance"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="0.0"
-                                            android:textColor="#FF0000"
-                                            android:textSize="42sp"
-                                            android:fontFamily="monospace"
-                                            android:textStyle="bold"
-                                            android:shadowColor="#FF0000"
-                                            android:shadowDx="0"
-                                            android:shadowDy="0"
-                                            android:shadowRadius="10"
-                                            tools:text="12.5" />
+                        </LinearLayout>
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/km"
-                                            android:textColor="#FFD700"
-                                            android:textSize="11sp"
-                                            android:textStyle="bold"
-                                            android:layout_marginTop="6dp"
-                                            android:shadowColor="#FFD700"
-                                            android:shadowDx="0"
-                                            android:shadowDy="0"
-                                            android:shadowRadius="4" />
-
-                                    </LinearLayout>
-
-                                </FrameLayout>
-
-                            </androidx.cardview.widget.CardView>
-
-                        </FrameLayout>
-
-                    </androidx.cardview.widget.CardView>
+                    </FrameLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Indicateurs de statut avec LED réalistes -->
+            <!-- Panel LED ultra réalistes -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_status"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="28dp"
                 app:cardBackgroundColor="#1a1a1a"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="16dp"
                 app:layout_constraintTop_toBottomOf="@id/container_time_distance"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -433,10 +365,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center">
+                    android:padding="24dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_display_realistic">
 
-                    <!-- Actif Indicator -->
+                    <!-- LED ACTIF -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -445,21 +378,13 @@
                         android:gravity="center">
 
                         <FrameLayout
-                            android:layout_width="24dp"
-                            android:layout_height="24dp">
-
-                            <!-- Effet de glow autour du LED -->
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/indicator_inactive"
-                                android:alpha="0.3" />
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
 
                             <View
                                 android:id="@+id/indicator_actif"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:background="@drawable/indicator_inactive" />
 
                         </FrameLayout>
@@ -471,11 +396,11 @@
                             android:textColor="#888888"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="12dp" />
 
                     </LinearLayout>
 
-                    <!-- GPS Indicator -->
+                    <!-- LED GPS -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -484,22 +409,14 @@
                         android:gravity="center">
 
                         <FrameLayout
-                            android:layout_width="24dp"
-                            android:layout_height="24dp">
-
-                            <!-- Effet de glow autour du LED -->
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/indicator_active_green"
-                                android:alpha="0.4" />
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
 
                             <View
                                 android:id="@+id/indicator_gps"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/indicator_active_green" />
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/led_indicator_green" />
 
                         </FrameLayout>
 
@@ -507,18 +424,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/gps"
-                            android:textColor="#22c55e"
+                            android:textColor="#22FF22"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:layout_marginTop="10dp"
-                            android:shadowColor="#22c55e"
+                            android:layout_marginTop="12dp"
+                            android:shadowColor="#22FF22"
                             android:shadowDx="0"
                             android:shadowDy="0"
-                            android:shadowRadius="4" />
+                            android:shadowRadius="6" />
 
                     </LinearLayout>
 
-                    <!-- Système Indicator -->
+                    <!-- LED SYSTÈME -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -527,22 +444,14 @@
                         android:gravity="center">
 
                         <FrameLayout
-                            android:layout_width="24dp"
-                            android:layout_height="24dp">
-
-                            <!-- Effet de glow autour du LED -->
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/indicator_active_green"
-                                android:alpha="0.4" />
+                            android:layout_width="32dp"
+                            android:layout_height="32dp">
 
                             <View
                                 android:id="@+id/indicator_system"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/indicator_active_green" />
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/led_indicator_green" />
 
                         </FrameLayout>
 
@@ -550,14 +459,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/systeme"
-                            android:textColor="#22c55e"
+                            android:textColor="#22FF22"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:layout_marginTop="10dp"
-                            android:shadowColor="#22c55e"
+                            android:layout_marginTop="12dp"
+                            android:shadowColor="#22FF22"
                             android:shadowDx="0"
                             android:shadowDy="0"
-                            android:shadowRadius="4" />
+                            android:shadowRadius="6" />
 
                     </LinearLayout>
 
@@ -565,7 +474,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Boutons de contrôle ultra réalistes -->
+            <!-- Boutons -->
             <LinearLayout
                 android:id="@+id/container_buttons"
                 android:layout_width="0dp"
@@ -576,7 +485,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Bouton START avec effet 3D -->
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -601,7 +509,6 @@
 
                 </FrameLayout>
 
-                <!-- Bouton RESET avec effet 3D -->
                 <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

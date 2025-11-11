@@ -5,67 +5,74 @@
     android:orientation="horizontal"
     android:gravity="center">
 
+    <!-- Digit 1 -->
     <TextView
         android:id="@+id/digit_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="0"
-        android:textColor="@color/segment_red"
-        android:textSize="56sp"
+        android:text="8"
+        android:textColor="#FF0000"
+        android:textSize="64sp"
         android:fontFamily="monospace"
         android:textStyle="bold"
         android:gravity="center"
-        android:shadowColor="@color/segment_red_glow"
+        android:shadowColor="#FF0000"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="8" />
+        android:shadowRadius="14"
+        android:letterSpacing="0" />
 
+    <!-- Digit 2 -->
     <TextView
         android:id="@+id/digit_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="0"
-        android:textColor="@color/segment_red"
-        android:textSize="56sp"
+        android:text="8"
+        android:textColor="#FF0000"
+        android:textSize="64sp"
         android:fontFamily="monospace"
         android:textStyle="bold"
         android:gravity="center"
-        android:shadowColor="@color/segment_red_glow"
+        android:shadowColor="#FF0000"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="8" />
+        android:shadowRadius="14"
+        android:letterSpacing="0" />
 
+    <!-- Point décimal -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="."
-        android:textColor="@color/segment_red"
-        android:textSize="56sp"
+        android:textColor="#FF0000"
+        android:textSize="64sp"
         android:fontFamily="monospace"
         android:textStyle="bold"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:shadowColor="@color/segment_red_glow"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:shadowColor="#FF0000"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="8" />
+        android:shadowRadius="14" />
 
+    <!-- Digit 3 (décimale) -->
     <TextView
         android:id="@+id/digit_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="0"
-        android:textColor="@color/segment_red"
-        android:textSize="56sp"
+        android:text="8"
+        android:textColor="#FF0000"
+        android:textSize="64sp"
         android:fontFamily="monospace"
         android:textStyle="bold"
         android:gravity="center"
-        android:shadowColor="@color/segment_red_glow"
+        android:shadowColor="#FF0000"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="8" />
+        android:shadowRadius="14"
+        android:letterSpacing="0" />
 
 </LinearLayout>

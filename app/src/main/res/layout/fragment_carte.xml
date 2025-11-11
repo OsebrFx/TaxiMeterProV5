@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <!-- Header avec effet métallique -->
+    <!-- Header -->
     <FrameLayout
         android:id="@+id/header_carte"
         android:layout_width="0dp"
@@ -80,106 +80,94 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Card de statut GPS avec design ultra réaliste -->
+    <!-- Card GPS Status ultra réaliste -->
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        app:cardBackgroundColor="#2a2a2a"
+        app:cardBackgroundColor="#00000000"
         app:cardCornerRadius="16dp"
-        app:cardElevation="20dp"
+        app:cardElevation="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+            android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
+            <!-- Background 7-segment -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_display_7segment" />
+
+            <!-- Grille de pixels éteints -->
+
+            <!-- Contenu -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="14dp"
+                android:alpha="0.3"
+                android:background="#05FF0000" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#1a1a1a"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp">
+                android:orientation="vertical"
+                android:padding="28dp"
+                android:gravity="center">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:text="@string/position_temps_reel"
+                    android:textColor="#FFD700"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.2"
+                    android:shadowColor="#FFD700"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="10" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_display_realistic" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <!-- LED GPS Active ultra réaliste -->
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/led_indicator_green" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="24dp"
-                        android:gravity="center">
+                        android:text="@string/gps_actif"
+                        android:textColor="#22FF22"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="monospace"
+                        android:layout_marginStart="16dp"
+                        android:shadowColor="#22FF22"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="10" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/position_temps_reel"
-                            android:textColor="#FFD700"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.2"
-                            android:shadowColor="#FFD700"
-                            android:shadowDx="0"
-                            android:shadowDy="0"
-                            android:shadowRadius="8" />
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="16dp"
-                            android:gravity="center">
-
-                            <FrameLayout
-                                android:layout_width="20dp"
-                                android:layout_height="20dp">
-
-                                <!-- Effet de glow autour du LED -->
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/indicator_active_green"
-                                    android:alpha="0.5" />
-
-                                <View
-                                    android:layout_width="14dp"
-                                    android:layout_height="14dp"
-                                    android:layout_gravity="center"
-                                    android:background="@drawable/indicator_active_green" />
-
-                            </FrameLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/gps_actif"
-                                android:textColor="#22c55e"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:layout_marginStart="12dp"
-                                android:shadowColor="#22c55e"
-                                android:shadowDx="0"
-                                android:shadowDy="0"
-                                android:shadowRadius="6" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
         </FrameLayout>
 

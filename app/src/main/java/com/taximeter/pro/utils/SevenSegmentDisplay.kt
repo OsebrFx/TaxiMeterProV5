@@ -1,10 +1,9 @@
 package com.taximeter.pro.utils
 
+import android.animation.ValueAnimator
 import android.graphics.Typeface
-import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
-import com.taximeter.pro.R
 
 class SevenSegmentDisplay(
     private val digit1: TextView,
@@ -12,64 +11,93 @@ class SevenSegmentDisplay(
     private val digit3: TextView
 ) {
 
+    private var currentValue: Double = 0.0
+
     init {
-        // Apply 7-segment display style to all digits
         applySegmentStyle()
     }
 
     private fun applySegmentStyle() {
         val digits = listOf(digit1, digit2, digit3)
         digits.forEach { digit ->
-            // Use monospace font for digital look
+            // Police monospace pour look digital
             digit.typeface = Typeface.MONOSPACE
-            digit.setTextColor(0xFFFF0000.toInt()) // Bright red
+            digit.setTextColor(0xFFFF0000.toInt()) // Rouge vif LED
 
-            // Apply glow effect
+            // Effet de glow ultra réaliste
             digit.setShadowLayer(
-                12f,  // radius
+                20f,  // radius augmenté
                 0f,   // dx
                 0f,   // dy
-                0xFF330000.toInt()  // dark red glow
+                0xFFFF0000.toInt()  // rouge brillant
             )
 
-            // Set letter spacing for authentic display look
-            digit.letterSpacing = 0.1f
+            // Espacement des caractères pour look authentique
+            digit.letterSpacing = 0.15f
         }
     }
 
     fun setNumber(number: Double) {
-        // Format with 1 decimal place
+        // Effet d'odomètre avec animation fluide
+        animateOdometer(currentValue, number)
+        currentValue = number
+    }
+
+    private fun animateOdometer(from: Double, to: Double) {
+        val animator = ValueAnimator.ofFloat(from.toFloat(), to.toFloat())
+        animator.duration = 400 // Animation plus rapide
+        animator.interpolator = AccelerateDecelerateInterpolator()
+
+        animator.addUpdateListener { animation ->
+            val value = animation.animatedValue as Float
+            updateDigits(value.toDouble())
+        }
+
+        animator.start()
+    }
+
+    private fun updateDigits(number: Double) {
+        // Format avec 1 décimale
         val formatted = String.format("%.1f", number)
         val parts = formatted.split(".")
 
-        // Extract integer and decimal parts
+        // Extraire parties entière et décimale
         val integerPart = parts[0].padStart(2, '0').takeLast(2)
         val decimalPart = if (parts.size > 1) parts[1].take(1) else "0"
 
-        // Set text for each digit
+        // Définir le texte pour chaque digit
         digit1.text = integerPart.getOrNull(0)?.toString() ?: "0"
         digit2.text = integerPart.getOrNull(1)?.toString() ?: "0"
         digit3.text = decimalPart
 
-        // Enhance glow on update
-        applyEnhancedGlow()
+        // Effet de flash lors du changement
+        applyFlashEffect()
     }
 
-    private fun applyEnhancedGlow() {
+    private fun applyFlashEffect() {
         listOf(digit1, digit2, digit3).forEach { digit ->
+            // Flash temporaire plus brillant
             digit.setShadowLayer(
-                14f,   // increased radius
+                28f,
                 0f,
                 0f,
-                0xFFFF3333.toInt()  // brighter glow
+                0xFFFF3333.toInt()
             )
+
+            // Retour au glow normal après 150ms
+            digit.postDelayed({
+                digit.setShadowLayer(
+                    20f,
+                    0f,
+                    0f,
+                    0xFFFF0000.toInt()
+                )
+            }, 150)
         }
     }
 
     fun reset() {
-        digit1.text = "0"
-        digit2.text = "0"
-        digit3.text = "0"
-        applySegmentStyle()
+        animateOdometer(currentValue, 2.5)
+        currentValue = 2.5
     }
 }
