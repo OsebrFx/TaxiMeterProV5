@@ -20,7 +20,7 @@ class TaxiMeterViewModel : ViewModel() {
     private val _timeInSeconds = MutableLiveData(0)
     val timeInSeconds: LiveData<Int> = _timeInSeconds
 
-    private val _fare = MutableLiveData(0.0)
+    private val _fare = MutableLiveData(BASE_FARE) // Initialiser avec le tarif de base
     val fare: LiveData<Double> = _fare
 
     private val _currentLocation = MutableLiveData<Location>()
@@ -50,7 +50,7 @@ class TaxiMeterViewModel : ViewModel() {
         stopTimer()
         _distance.value = 0.0
         _timeInSeconds.value = 0
-        _fare.value = 0.0
+        _fare.value = BASE_FARE // Réinitialiser au tarif de base
         lastLocation = null
     }
 

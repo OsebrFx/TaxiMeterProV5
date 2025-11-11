@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Corps principal du bouton pressé -->
+    <item android:top="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#eab308"
+                android:centerColor="#ca8a04"
+                android:endColor="#a16207"
+                android:type="linear" />
+            <corners android:radius="16dp" />
+            <stroke
+                android:width="3dp"
+                android:color="#78350f" />
+            <padding
+                android:left="16dp"
+                android:top="8dp"
+                android:right="16dp"
+                android:bottom="8dp" />
+        </shape>
+    </item>
+</layer-list>

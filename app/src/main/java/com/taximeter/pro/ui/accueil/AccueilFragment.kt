@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.taximeter.pro.R
 import com.taximeter.pro.databinding.FragmentAccueilBinding
-import com.taximeter.pro.viewmodel.TaxiMeterViewModel
 
 class AccueilFragment : Fragment() {
 
@@ -28,7 +27,8 @@ class AccueilFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnStartTrip.setOnClickListener {
-            findNavController().navigate(R.id.action_accueilFragment_to_compteurFragment)
+            // Navigate directly to compteurFragment using its ID
+            findNavController().navigate(R.id.compteurFragment)
         }
     }
 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Bordure extérieure métallique -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#2a2a2a" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- Bordure intérieure -->
+    <item
+        android:top="4dp"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1a1a1a" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Écran LCD -->
+    <item
+        android:top="8dp"
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#0d0d0d"
+                android:centerColor="#050505"
+                android:endColor="#0a0a0a"
+                android:type="linear" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Reflet sur l'écran -->
+    <item
+        android:top="8dp"
+        android:bottom="40dp"
+        android:left="8dp"
+        android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#15FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="8dp"
+                android:topRightRadius="8dp" />
+        </shape>
+    </item>
+</layer-list>

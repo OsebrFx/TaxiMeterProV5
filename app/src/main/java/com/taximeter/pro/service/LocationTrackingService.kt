@@ -4,9 +4,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.location.Location
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
 import com.taximeter.pro.R
 
@@ -18,6 +20,8 @@ class LocationTrackingService : Service() {
     companion object {
         const val CHANNEL_ID = "TaxiMeterLocationChannel"
         const val NOTIFICATION_ID = 1
+        const val ACTION_LOCATION_UPDATE = "com.taximeter.pro.LOCATION_UPDATE"
+        const val EXTRA_LOCATION = "extra_location"
     }
 
     override fun onCreate() {
@@ -54,8 +58,11 @@ class LocationTrackingService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
-                    // Broadcast location to ViewModel via LocalBroadcastManager
-                    // or use EventBus/LiveData
+                    // Envoyer la localisation via LocalBroadcast
+                    val intent = Intent(ACTION_LOCATION_UPDATE)
+                    intent.putExtra(EXTRA_LOCATION, location)
+                    LocalBroadcastManager.getInstance(this@LocationTrackingService)
+                        .sendBroadcast(intent)
                 }
             }
         }
@@ -64,7 +71,7 @@ class LocationTrackingService : Service() {
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
-            5000L // 5 seconds
+            5000L // 5 secondes
         ).apply {
             setMinUpdateIntervalMillis(2000L)
             setWaitForAccurateLocation(false)
@@ -77,7 +84,7 @@ class LocationTrackingService : Service() {
                 Looper.getMainLooper()
             )
         } catch (e: SecurityException) {
-            // Handle permission not granted
+            // Gérer l'exception de permission
         }
     }
 

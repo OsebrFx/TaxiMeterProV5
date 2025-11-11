@@ -7,7 +7,13 @@
     <fragment
         android:id="@+id/accueilFragment"
         android:name="com.taximeter.pro.ui.accueil.AccueilFragment"
-        android:label="@string/accueil" />
+        android:label="@string/accueil">
+
+        <!-- Add navigation action to compteurFragment -->
+        <action
+            android:id="@+id/action_accueilFragment_to_compteurFragment"
+            app:destination="@id/compteurFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/compteurFragment"

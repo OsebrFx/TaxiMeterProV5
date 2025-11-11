@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Ombre du bouton -->
+    <item android:top="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#80000000" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+
+    <!-- Corps principal du bouton -->
+    <item android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#fde047"
+                android:centerColor="#facc15"
+                android:endColor="#eab308"
+                android:type="linear" />
+            <corners android:radius="16dp" />
+            <stroke
+                android:width="3dp"
+                android:color="#a16207" />
+            <padding
+                android:left="16dp"
+                android:top="8dp"
+                android:right="16dp"
+                android:bottom="8dp" />
+        </shape>
+    </item>
+
+    <!-- Surbrillance supérieure -->
+    <item
+        android:top="0dp"
+        android:bottom="50dp"
+        android:left="8dp"
+        android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#40FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="14dp"
+                android:topRightRadius="14dp" />
+        </shape>
+    </item>
+</layer-list>

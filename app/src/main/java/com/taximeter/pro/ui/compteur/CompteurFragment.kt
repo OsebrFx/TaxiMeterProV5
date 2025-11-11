@@ -6,14 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import pub.devrel.easypermissions.EasyPermissions
+import com.taximeter.pro.MainActivity
 import com.taximeter.pro.R
 import com.taximeter.pro.databinding.FragmentCompteurBinding
 import com.taximeter.pro.service.LocationTrackingService
 import com.taximeter.pro.viewmodel.TaxiMeterViewModel
 import com.taximeter.pro.utils.NotificationHelper
+import com.taximeter.pro.utils.SevenSegmentDisplay
 
 class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
@@ -21,6 +24,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private val binding get() = _binding!!
 
     private val viewModel: TaxiMeterViewModel by activityViewModels()
+    private lateinit var sevenSegmentDisplay: SevenSegmentDisplay
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST = 100
@@ -38,14 +42,61 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSevenSegmentDisplay()
         setupObservers()
         setupClickListeners()
+        setupHeaderButtons()
         checkLocationPermissions()
+    }
+
+    private fun setupSevenSegmentDisplay() {
+        // CORRECTION : Accès aux TextView via binding.root.findViewById
+        val digit1 = binding.root.findViewById<TextView>(R.id.digit_1)
+        val digit2 = binding.root.findViewById<TextView>(R.id.digit_2)
+        val digit3 = binding.root.findViewById<TextView>(R.id.digit_3)
+
+        sevenSegmentDisplay = SevenSegmentDisplay(digit1, digit2, digit3)
+
+        // Afficher le tarif de base dès le début (2.5 DH)
+        sevenSegmentDisplay.setNumber(2.5)
+    }
+
+    private fun setupHeaderButtons() {
+        // Bouton menu pour ouvrir le drawer
+        binding.root.findViewById<View>(R.id.btn_menu)?.setOnClickListener {
+            (activity as? MainActivity)?.openDrawer()
+        }
+
+        // Bouton info
+        binding.root.findViewById<View>(R.id.btn_info)?.setOnClickListener {
+            showInfoDialog()
+        }
+    }
+
+    private fun showInfoDialog() {
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setTitle("À propos")
+            .setMessage("""
+                TaxiMeter Pro v1.0
+                
+                Application de compteur de taxi professionnel.
+                
+                Tarifs:
+                • Prise en charge: 2.5 DH
+                • Prix par km: 1.5 DH
+                • Prix par minute: 0.5 DH
+                
+                Développé par Salah Eddine
+            """.trimIndent())
+            .setPositiveButton("OK", null)
+            .create()
+
+        dialog.show()
     }
 
     private fun setupObservers() {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
-            binding.tvFare.text = String.format("%.1f", fare)
+            sevenSegmentDisplay.setNumber(fare)
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
@@ -55,7 +106,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         viewModel.timeInSeconds.observe(viewLifecycleOwner) { seconds ->
             val minutes = seconds / 60
             val secs = seconds % 60
-            binding.tvTime.text = String.format("%02d%02d", minutes, secs)
+            binding.tvTime.text = String.format("%02d:%02d", minutes, secs)
         }
 
         viewModel.isRunning.observe(viewLifecycleOwner) { isRunning ->
@@ -81,9 +132,10 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.btnReset.setOnClickListener {
             viewModel.resetTrip()
             stopLocationService()
+            sevenSegmentDisplay.setNumber(2.5) // Réinitialiser au tarif de base
             NotificationHelper.showTripEndNotification(
                 requireContext(),
-                viewModel.fare.value ?: 0.0,
+                viewModel.fare.value ?: 2.5,
                 viewModel.distance.value ?: 0.0,
                 viewModel.timeInSeconds.value ?: 0
             )
@@ -91,10 +143,15 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun updateUIForRunningState(isRunning: Boolean) {
-        binding.btnStart.text = if (isRunning) "PAUSE" else "DÉMARRER"
-        binding.indicatorActif.setBackgroundResource(
-            if (isRunning) R.drawable.indicator_active else R.drawable.indicator_inactive
-        )
+        if (isRunning) {
+            binding.btnStart.text = "PAUSE"
+            binding.btnStart.setIconResource(R.drawable.ic_pause)
+            binding.indicatorActif.setBackgroundResource(R.drawable.indicator_active)
+        } else {
+            binding.btnStart.text = "DÉMARRER"
+            binding.btnStart.setIconResource(R.drawable.ic_play)
+            binding.indicatorActif.setBackgroundResource(R.drawable.indicator_inactive)
+        }
     }
 
     private fun hasLocationPermissions(): Boolean {
