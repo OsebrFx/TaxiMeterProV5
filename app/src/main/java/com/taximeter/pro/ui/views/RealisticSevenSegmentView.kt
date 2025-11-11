@@ -6,6 +6,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import java.util.Locale
 import kotlin.math.min
 
 /**
@@ -86,8 +87,8 @@ class RealisticSevenSegmentView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // Format de la valeur: "XX.X"
-        val formatted = String.format("%.1f", currentValue)
+        // Format de la valeur: "XX.X" (utilise Locale.US pour garantir le point décimal)
+        val formatted = String.format(Locale.US, "%.1f", currentValue)
         val parts = formatted.split(".")
         val integerPart = parts[0].padStart(2, '0')
         val decimalPart = if (parts.size > 1) parts[1] else "0"
@@ -102,7 +103,9 @@ class RealisticSevenSegmentView @JvmOverloads constructor(
 
         // Dessiner les deux premiers digits (partie entière)
         integerPart.forEachIndexed { index, char ->
-            drawDigit(canvas, char.toString().toInt(), xOffset, yOffset, digitWidth, digitHeight)
+            // Convertir le caractère en chiffre (ignorer les caractères non-numériques)
+            val digit = char.toString().toIntOrNull() ?: 0
+            drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
             xOffset += digitWidth + 8f
         }
 
@@ -111,7 +114,8 @@ class RealisticSevenSegmentView @JvmOverloads constructor(
         xOffset += 20f
 
         // Dessiner le digit décimal
-        drawDigit(canvas, decimalPart.toInt(), xOffset, yOffset, digitWidth, digitHeight)
+        val decimalDigit = decimalPart.toIntOrNull() ?: 0
+        drawDigit(canvas, decimalDigit, xOffset, yOffset, digitWidth, digitHeight)
         xOffset += digitWidth + 30f
 
         // Dessiner l'unité "DH"
