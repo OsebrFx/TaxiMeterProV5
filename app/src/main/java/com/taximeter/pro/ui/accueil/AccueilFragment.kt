@@ -30,6 +30,8 @@ class AccueilFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupHeaderButtons()
+
         binding.btnStartTrip.setOnClickListener {
             animateButtonPress(it) {
                 findNavController().navigate(R.id.compteurFragment)
@@ -38,6 +40,55 @@ class AccueilFragment : Fragment() {
 
         // Démarrer les animations d'entrée
         startEntryAnimations()
+    }
+
+    private fun setupHeaderButtons() {
+        binding.btnMenu?.setOnClickListener {
+            animateClick(it)
+            (activity as? com.taximeter.pro.MainActivity)?.openDrawer()
+        }
+
+        binding.btnInfo?.setOnClickListener {
+            animateClick(it)
+            showInfoDialog()
+        }
+    }
+
+    private fun animateClick(view: View) {
+        view.animate()
+            .scaleX(0.9f)
+            .scaleY(0.9f)
+            .setDuration(100)
+            .withEndAction {
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
+    }
+
+    private fun showInfoDialog() {
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setTitle("À propos")
+            .setMessage(
+                """
+                TaxiMeter Pro v1.0
+
+                Application de compteur de taxi professionnel.
+
+                Tarifs:
+                • Prise en charge: 2.5 DH
+                • Prix par km: 1.5 DH
+                • Prix par minute: 0.5 DH
+
+                Développé par Salah Eddine
+                """.trimIndent()
+            )
+            .setPositiveButton("OK", null)
+            .create()
+        dialog.show()
     }
 
     private fun startEntryAnimations() {

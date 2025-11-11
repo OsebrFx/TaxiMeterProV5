@@ -40,10 +40,14 @@
                 android:paddingEnd="20dp">
 
                 <ImageView
+                    android:id="@+id/btn_menu"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/ic_menu"
                     android:contentDescription="@string/menu"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
                     app:tint="@color/black" />
 
@@ -63,10 +67,14 @@
                     android:shadowRadius="3" />
 
                 <ImageView
+                    android:id="@+id/btn_info"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/ic_info"
                     android:contentDescription="@string/info"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
                     app:tint="@color/black" />
 

@@ -46,11 +46,49 @@ class CarteFragment : Fragment(), OnMapReadyCallback, EasyPermissions.Permission
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupHeaderButtons()
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         // Animations d'entrée
         startEntryAnimations()
+    }
+
+    private fun setupHeaderButtons() {
+        binding.btnMenu?.setOnClickListener {
+            animateClick(it)
+            (activity as? com.taximeter.pro.MainActivity)?.openDrawer()
+        }
+
+        binding.btnInfo?.setOnClickListener {
+            animateClick(it)
+            showInfoDialog()
+        }
+    }
+
+    private fun animateClick(view: View) {
+        view.animate()
+            .scaleX(0.9f)
+            .scaleY(0.9f)
+            .setDuration(100)
+            .withEndAction {
+                view.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
+    }
+
+    private fun showInfoDialog() {
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Carte GPS")
+            .setMessage("Suivi en temps réel de votre position GPS sur Google Maps.")
+            .setPositiveButton("OK", null)
+            .create()
+        dialog.show()
     }
 
     private fun startEntryAnimations() {
