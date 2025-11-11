@@ -37,6 +37,7 @@ class TaxiMeterViewModel : ViewModel() {
 
     fun startTrip() {
         _isRunning.value = true
+        lastLocation = null // Reset pour préparer nouveau trajet
         startTimer()
     }
 
@@ -57,13 +58,31 @@ class TaxiMeterViewModel : ViewModel() {
     fun updateLocation(location: Location) {
         _currentLocation.value = location
 
+        // Seulement calculer la distance si le compteur est en marche
         if (_isRunning.value == true) {
+            // Filtrer les localisations inexactes (précision > 50m)
+            if (location.hasAccuracy() && location.accuracy > 50f) {
+                return
+            }
+
             lastLocation?.let { last ->
                 val distanceInMeters = last.distanceTo(location)
-                val distanceInKm = distanceInMeters / 1000.0
-                _distance.value = (_distance.value ?: 0.0) + distanceInKm
-                calculateFare()
+
+                // Filtrer les sauts irréalistes (> 500m en 5 secondes = 360 km/h)
+                if (distanceInMeters > 500f) {
+                    lastLocation = location
+                    return
+                }
+
+                // Ignorer les très petits mouvements (< 1m) pour éviter le bruit GPS
+                if (distanceInMeters >= 1f) {
+                    val distanceInKm = distanceInMeters / 1000.0
+                    _distance.value = (_distance.value ?: 0.0) + distanceInKm
+                    calculateFare()
+                }
             }
+
+            // Toujours mettre à jour lastLocation pour le prochain calcul
             lastLocation = location
         }
     }
