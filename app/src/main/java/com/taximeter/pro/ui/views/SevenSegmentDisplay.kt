@@ -104,7 +104,7 @@ class SevenSegmentDisplay @JvmOverloads constructor(
     }
 
     /**
-     * Définit la valeur avec animation odomètre
+     * Définit la valeur avec animation odomètre - effet de roulement mécanique
      */
     fun setValue(value: Double, animate: Boolean = true) {
         targetValue = value
@@ -112,12 +112,24 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         if (animate) {
             animator?.cancel()
             animator = ValueAnimator.ofFloat(currentValue.toFloat(), targetValue.toFloat()).apply {
-                duration = 600
-                interpolator = LinearInterpolator()
+                // Duration plus longue pour effet odométrique visible
+                duration = 1200
+                // AccelerateDecelerateInterpolator pour effet mécanique réaliste
+                interpolator = AccelerateDecelerateInterpolator()
                 addUpdateListener { animation ->
                     currentValue = (animation.animatedValue as Float).toDouble()
                     invalidate()
                 }
+                addListener(object : android.animation.Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: android.animation.Animator) {}
+                    override fun onAnimationEnd(animation: android.animation.Animator) {
+                        // Assurer que la valeur finale est exacte
+                        currentValue = targetValue
+                        invalidate()
+                    }
+                    override fun onAnimationCancel(animation: android.animation.Animator) {}
+                    override fun onAnimationRepeat(animation: android.animation.Animator) {}
+                })
                 start()
             }
         } else {
@@ -154,35 +166,38 @@ class SevenSegmentDisplay @JvmOverloads constructor(
 
         // Calculer les dimensions avec meilleur espacement
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 7.5f  // Plus d'espace pour éviter chevauchement
+        val digitWidth = totalWidth / 8f  // Plus d'espace total pour "DH" en 7-seg
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.2f  // Marge gauche
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.1f
         val yOffset = paddingTop.toFloat()
 
         // Dessiner partie entière (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f  // Plus d'espacement entre digits
+            xOffset += digitWidth + 16f  // Plus d'espacement
         }
 
-        // Point décimal
-        drawDecimalPoint(canvas, xOffset + 6f, yOffset, digitHeight)
-        xOffset += 28f  // Plus d'espace après le point
+        // Point décimal - bien séparé
+        xOffset += 8f
+        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
+        xOffset += 32f  // Beaucoup plus d'espace après le point
 
         // Partie décimale (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f
+            xOffset += digitWidth + 16f
         }
 
-        // Unité DH avec taille adaptative
-        xOffset += 20f
-        val dhTextSize = digitHeight * 0.4f  // Plus grand pour meilleure visibilité
-        unitPaint.textSize = dhTextSize
-        canvas.drawText("DH", xOffset, yOffset + digitHeight * 0.55f, unitPaint)
+        // Espace avant DH
+        xOffset += 24f
+
+        // Dessiner "D" et "H" en style 7-segments
+        drawLetterD(canvas, xOffset, yOffset, digitWidth * 0.6f, digitHeight)
+        xOffset += digitWidth * 0.6f + 8f
+        drawLetterH(canvas, xOffset, yOffset, digitWidth * 0.6f, digitHeight)
     }
 
     private fun drawTime(canvas: Canvas) {
@@ -193,26 +208,27 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val formatted = String.format(Locale.US, "%02d%02d", minutes, seconds)
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 5.5f  // Plus d'espace
+        val digitWidth = totalWidth / 5.5f
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.15f  // Marge gauche
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.1f
         val yOffset = paddingTop.toFloat()
 
         // Minutes (2 digits)
         for (i in 0..1) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f  // Espacement amélioré
+            xOffset += digitWidth + 16f
         }
 
-        // Deux points ":"
-        drawColon(canvas, xOffset + 6f, yOffset, digitHeight)
-        xOffset += 28f  // Plus d'espace après les deux points
+        // Deux points ":" - bien séparé
+        xOffset += 8f
+        drawColon(canvas, xOffset, yOffset, digitHeight)
+        xOffset += 32f
 
         // Secondes (2 digits)
         for (i in 2..3) {
             drawDigit(canvas, formatted[i].toString().toIntOrNull() ?: 0, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f
+            xOffset += digitWidth + 16f
         }
     }
 
@@ -224,28 +240,29 @@ class SevenSegmentDisplay @JvmOverloads constructor(
         val decPart = if (parts.size > 1) parts[1].take(2).padEnd(2, '0') else "00"
 
         val totalWidth = width - paddingLeft - paddingRight.toFloat()
-        val digitWidth = totalWidth / 5.8f  // Plus d'espace pour éviter chevauchement
+        val digitWidth = totalWidth / 5.5f
         val digitHeight = (height - paddingTop - paddingBottom).toFloat()
 
-        var xOffset = paddingLeft.toFloat() + digitWidth * 0.15f  // Marge gauche
+        var xOffset = paddingLeft.toFloat() + digitWidth * 0.1f
         val yOffset = paddingTop.toFloat()
 
         // Partie entière (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < intPart.length) intPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f  // Espacement amélioré
+            xOffset += digitWidth + 16f
         }
 
-        // Point décimal
-        drawDecimalPoint(canvas, xOffset + 6f, yOffset, digitHeight)
-        xOffset += 28f  // Plus d'espace après le point
+        // Point décimal - bien séparé
+        xOffset += 8f
+        drawDecimalPoint(canvas, xOffset, yOffset, digitHeight)
+        xOffset += 32f
 
         // Partie décimale (2 digits)
         for (i in 0 until 2) {
             val digit = if (i < decPart.length) decPart[i].toString().toIntOrNull() ?: 0 else 0
             drawDigit(canvas, digit, xOffset, yOffset, digitWidth, digitHeight)
-            xOffset += digitWidth + 12f
+            xOffset += digitWidth + 16f
         }
     }
 
@@ -355,6 +372,53 @@ class SevenSegmentDisplay @JvmOverloads constructor(
             8 -> setOf('a', 'b', 'c', 'd', 'e', 'f', 'g')
             9 -> setOf('a', 'b', 'c', 'd', 'f', 'g')
             else -> emptySet()
+        }
+    }
+
+    // Dessiner la lettre "D" en style 7-segments
+    private fun drawLetterD(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
+        // D = segments a, b, c, d, e, f (comme 0 mais en plus étroit)
+        val segments = setOf('a', 'b', 'c', 'd', 'e', 'f')
+
+        val segmentWidth = width * 0.75f
+        val segmentHeight = height * 0.10f
+        val verticalWidth = height * 0.10f
+        val verticalHeight = height * 0.38f
+
+        val positions = mapOf(
+            'a' to SegmentPos(x + width * 0.12f, y + height * 0.02f, segmentWidth, segmentHeight),
+            'b' to SegmentPos(x + width * 0.8f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + width * 0.8f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'd' to SegmentPos(x + width * 0.12f, y + height * 0.88f, segmentWidth, segmentHeight),
+            'e' to SegmentPos(x + width * 0.05f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + width * 0.05f, y + height * 0.10f, verticalWidth, verticalHeight)
+        )
+
+        positions.forEach { (seg, pos) ->
+            drawSegment(canvas, pos, seg in segments)
+        }
+    }
+
+    // Dessiner la lettre "H" en style 7-segments
+    private fun drawLetterH(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {
+        // H = segments b, c, e, f, g
+        val segments = setOf('b', 'c', 'e', 'f', 'g')
+
+        val segmentWidth = width * 0.75f
+        val segmentHeight = height * 0.10f
+        val verticalWidth = height * 0.10f
+        val verticalHeight = height * 0.38f
+
+        val positions = mapOf(
+            'b' to SegmentPos(x + width * 0.8f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'c' to SegmentPos(x + width * 0.8f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'e' to SegmentPos(x + width * 0.05f, y + height * 0.52f, verticalWidth, verticalHeight),
+            'f' to SegmentPos(x + width * 0.05f, y + height * 0.10f, verticalWidth, verticalHeight),
+            'g' to SegmentPos(x + width * 0.12f, y + height * 0.46f, segmentWidth, segmentHeight)
+        )
+
+        positions.forEach { (seg, pos) ->
+            drawSegment(canvas, pos, seg in segments)
         }
     }
 

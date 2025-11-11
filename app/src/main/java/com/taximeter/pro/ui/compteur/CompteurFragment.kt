@@ -3,7 +3,11 @@ package com.taximeter.pro.ui.compteur
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +17,7 @@ import android.view.animation.OvershootInterpolator
 import android.view.animation.BounceInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import pub.devrel.easypermissions.EasyPermissions
 import com.taximeter.pro.MainActivity
 import com.taximeter.pro.R
@@ -31,6 +36,14 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var sevenSegmentMoney: SevenSegmentDisplay
     private lateinit var sevenSegmentTime: SevenSegmentDisplay
     private lateinit var sevenSegmentDistance: SevenSegmentDisplay
+
+    private val locationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.getParcelableExtra<Location>(LocationTrackingService.EXTRA_LOCATION)?.let { location ->
+                viewModel.updateLocation(location)
+            }
+        }
+    }
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST = 100
@@ -249,18 +262,33 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
             sevenSegmentMoney.setValue(fare, animate = true)
             animateDisplayFlash(binding.cardFare)
+            updateNotificationData()
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
             sevenSegmentDistance.setValue(distance, animate = true)
+            updateNotificationData()
         }
 
         viewModel.timeInSeconds.observe(viewLifecycleOwner) { seconds ->
             sevenSegmentTime.setTimeValue(seconds, animate = true)
+            updateNotificationData()
         }
 
         viewModel.isRunning.observe(viewLifecycleOwner) { isRunning ->
             updateUIForRunningState(isRunning)
+        }
+    }
+
+    private fun updateNotificationData() {
+        // Envoyer les données au service pour mettre à jour la notification
+        if (viewModel.isRunning.value == true) {
+            val intent = Intent(LocationTrackingService.ACTION_UPDATE_NOTIFICATION).apply {
+                putExtra(LocationTrackingService.EXTRA_FARE, viewModel.fare.value ?: 2.5)
+                putExtra(LocationTrackingService.EXTRA_DISTANCE, viewModel.distance.value ?: 0.0)
+                putExtra(LocationTrackingService.EXTRA_TIME, viewModel.timeInSeconds.value ?: 0)
+            }
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
         }
     }
 
@@ -400,6 +428,21 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         Intent(requireContext(), LocationTrackingService::class.java).also {
             requireContext().stopService(it)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Register location updates receiver
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            locationReceiver,
+            IntentFilter(LocationTrackingService.ACTION_LOCATION_UPDATE)
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Unregister location updates receiver
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(locationReceiver)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
