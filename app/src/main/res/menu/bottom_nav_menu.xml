@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/accueilFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/accueil" />
+
+    <item
+        android:id="@+id/compteurFragment"
+        android:icon="@drawable/ic_meter"
+        android:title="@string/compteur" />
+
+    <item
+        android:id="@+id/carteFragment"
+        android:icon="@drawable/ic_map"
+        android:title="@string/carte" />
+
+    <item
+        android:id="@+id/profilFragment"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profil" />
+</menu>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/accueilFragment">
+
+    <fragment
+        android:id="@+id/accueilFragment"
+        android:name="com.taximeter.pro.ui.accueil.AccueilFragment"
+        android:label="@string/accueil" />
+
+    <fragment
+        android:id="@+id/compteurFragment"
+        android:name="com.taximeter.pro.ui.compteur.CompteurFragment"
+        android:label="@string/compteur" />
+
+    <fragment
+        android:id="@+id/carteFragment"
+        android:name="com.taximeter.pro.ui.carte.CarteFragment"
+        android:label="@string/carte" />
+
+    <fragment
+        android:id="@+id/profilFragment"
+        android:name="com.taximeter.pro.ui.profil.ProfilFragment"
+        android:label="@string/profil" />
+
+</navigation>

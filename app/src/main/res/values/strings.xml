@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TaxiMeter Pro</string>
+
+    <!-- Navigation -->
+    <string name="accueil">Accueil</string>
+    <string name="compteur">Compteur</string>
+    <string name="carte">Carte</string>
+    <string name="profil">Profil</string>
+
+    <!-- Main Screen -->
+    <string name="montant_total">MONTANT TOTAL</string>
+    <string name="temps">TEMPS</string>
+    <string name="distance">DISTANCE</string>
+    <string name="mm_ss">MM:SS</string>
+    <string name="km">KM</string>
+
+    <!-- Status -->
+    <string name="actif">Actif</string>
+    <string name="gps">GPS</string>
+    <string name="systeme">Système</string>
+    <string name="gps_actif">GPS Actif</string>
+
+    <!-- Buttons -->
+    <string name="demarrer">DÉMARRER</string>
+    <string name="pause">PAUSE</string>
+    <string name="reinitialiser">RÉINITIALISER</string>
+    <string name="demarrer_course">DÉMARRER LA COURSE</string>
+
+    <!-- Profile -->
+    <string name="age">Âge:</string>
+    <string name="permis">Permis:</string>
+    <string name="qr_code">QR Code</string>
+    <string name="scan_for_info">Scanner pour info chauffeur</string>
+    <string name="profile_picture">Photo de profil</string>
+
+    <!-- Map -->
+    <string name="position_temps_reel">Position en temps réel</string>
+
+    <!-- Home -->
+    <string name="prise_en_charge">PRISE EN CHARGE</string>
+    <string name="tarif_km">TARIF PAR KILOMÈTRE</string>
+    <string name="tarif_minute">TARIF PAR MINUTE</string>
+    <string name="base_fare">2.5 DH</string>
+    <string name="price_per_km">1.5 DH/km</string>
+    <string name="price_per_minute">0.5 DH/min</string>
+
+    <!-- Notifications -->
+    <string name="trip_ended">Course terminée</string>
+    <string name="trip_summary">Tarif: %.1f DH\nDistance: %.1f km\nDurée: %d minutes</string>
+
+    <!-- Common -->
+    <string name="menu">Menu</string>
+    <string name="info">Info</string>
+</resources>

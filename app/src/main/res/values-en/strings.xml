@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TaxiMeter Pro</string>
+
+    <string name="accueil">Home</string>
+    <string name="compteur">Meter</string>
+    <string name="carte">Map</string>
+    <string name="profil">Profile</string>
+
+    <string name="montant_total">TOTAL AMOUNT</string>
+    <string name="temps">TIME</string>
+    <string name="distance">DISTANCE</string>
+
+    <string name="actif">Active</string>
+    <string name="gps">GPS</string>
+    <string name="systeme">System</string>
+    <string name="gps_actif">GPS Active</string>
+
+    <string name="demarrer">START</string>
+    <string name="pause">PAUSE</string>
+    <string name="reinitialiser">RESET</string>
+    <string name="demarrer_course">START TRIP</string>
+
+    <string name="age">Age:</string>
+    <string name="permis">License:</string>
+    <string name="qr_code">QR Code</string>
+    <string name="scan_for_info">Scan for driver info</string>
+
+    <string name="position_temps_reel">Real-time position</string>
+
+    <string name="prise_en_charge">BASE FARE</string>
+    <string name="tarif_km">RATE PER KILOMETER</string>
+    <string name="tarif_minute">RATE PER MINUTE</string>
+
+    <string name="trip_ended">Trip ended</string>
+</resources>

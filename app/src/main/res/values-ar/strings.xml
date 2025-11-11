@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تاكسي ميتر برو</string>
+
+    <string name="accueil">الرئيسية</string>
+    <string name="compteur">العداد</string>
+    <string name="carte">الخريطة</string>
+    <string name="profil">الملف الشخصي</string>
+
+    <string name="montant_total">المبلغ الإجمالي</string>
+    <string name="temps">الوقت</string>
+    <string name="distance">المسافة</string>
+
+    <string name="actif">نشط</string>
+    <string name="gps">نظام تحديد المواقع</string>
+    <string name="systeme">النظام</string>
+    <string name="gps_actif">نظام تحديد المواقع نشط</string>
+
+    <string name="demarrer">ابدأ</string>
+    <string name="pause">إيقاف مؤقت</string>
+    <string name="reinitialiser">إعادة تعيين</string>
+    <string name="demarrer_course">ابدأ الرحلة</string>
+
+    <string name="age">العمر:</string>
+    <string name="permis">رخصة القيادة:</string>
+    <string name="qr_code">رمز الاستجابة السريعة</string>
+    <string name="scan_for_info">امسح للحصول على معلومات السائق</string>
+
+    <string name="position_temps_reel">الموقع في الوقت الفعلي</string>
+
+    <string name="prise_en_charge">رسوم البداية</string>
+    <string name="tarif_km">التعريفة لكل كيلومتر</string>
+    <string name="tarif_minute">التعريفة لكل دقيقة</string>
+
+    <string name="trip_ended">انتهت الرحلة</string>
+</resources>
