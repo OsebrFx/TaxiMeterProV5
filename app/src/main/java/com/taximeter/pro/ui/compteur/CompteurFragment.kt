@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.view.animation.BounceInterpolator
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import pub.devrel.easypermissions.EasyPermissions
@@ -21,7 +20,7 @@ import com.taximeter.pro.databinding.FragmentCompteurBinding
 import com.taximeter.pro.service.LocationTrackingService
 import com.taximeter.pro.viewmodel.TaxiMeterViewModel
 import com.taximeter.pro.utils.NotificationHelper
-import com.taximeter.pro.ui.views.RealisticSevenSegmentView
+import com.taximeter.pro.ui.views.SevenSegmentDisplay
 
 class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
@@ -29,7 +28,9 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private val binding get() = _binding!!
 
     private val viewModel: TaxiMeterViewModel by activityViewModels()
-    private lateinit var realisticSevenSegment: RealisticSevenSegmentView
+    private lateinit var sevenSegmentMoney: SevenSegmentDisplay
+    private lateinit var sevenSegmentTime: SevenSegmentDisplay
+    private lateinit var sevenSegmentDistance: SevenSegmentDisplay
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST = 100
@@ -58,11 +59,24 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun setupSevenSegmentDisplay() {
-        realisticSevenSegment = binding.realisticSevenSegment
-        // Ensure the view is visible and properly initialized
-        realisticSevenSegment.visibility = View.VISIBLE
-        realisticSevenSegment.post {
-            realisticSevenSegment.setValue(2.5, animate = false)
+        // Initialiser les trois affichages 7-segments
+        sevenSegmentMoney = binding.sevenSegmentMoney
+        sevenSegmentTime = binding.sevenSegmentTime
+        sevenSegmentDistance = binding.sevenSegmentDistance
+
+        // Ensure views are visible and properly initialized
+        sevenSegmentMoney.visibility = View.VISIBLE
+        sevenSegmentTime.visibility = View.VISIBLE
+        sevenSegmentDistance.visibility = View.VISIBLE
+
+        sevenSegmentMoney.post {
+            sevenSegmentMoney.setValue(2.5, animate = false)
+        }
+        sevenSegmentTime.post {
+            sevenSegmentTime.setTimeValue(0, animate = false)
+        }
+        sevenSegmentDistance.post {
+            sevenSegmentDistance.setValue(0.0, animate = false)
         }
     }
 
@@ -233,18 +247,16 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun setupObservers() {
         viewModel.fare.observe(viewLifecycleOwner) { fare ->
-            realisticSevenSegment.setValue(fare, animate = true)
+            sevenSegmentMoney.setValue(fare, animate = true)
             animateDisplayFlash(binding.cardFare)
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
-            animateTextChangeWithOdometer(binding.tvDistance, distance)
+            sevenSegmentDistance.setValue(distance, animate = true)
         }
 
         viewModel.timeInSeconds.observe(viewLifecycleOwner) { seconds ->
-            val minutes = seconds / 60
-            val secs = seconds % 60
-            animateTextChange(binding.tvTime, String.format("%02d:%02d", minutes, secs))
+            sevenSegmentTime.setTimeValue(seconds, animate = true)
         }
 
         viewModel.isRunning.observe(viewLifecycleOwner) { isRunning ->
@@ -265,56 +277,6 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     .scaleY(1f)
                     .alpha(1f)
                     .setDuration(100)
-                    .start()
-            }
-            .start()
-    }
-
-    private fun animateTextChangeWithOdometer(textView: TextView, newValue: Double) {
-        val currentValue = textView.text.toString().toDoubleOrNull() ?: 0.0
-
-        ValueAnimator.ofFloat(currentValue.toFloat(), newValue.toFloat()).apply {
-            duration = 450
-            interpolator = AccelerateDecelerateInterpolator()
-            addUpdateListener { animation ->
-                val value = animation.animatedValue as Float
-                textView.text = String.format("%.1f", value)
-            }
-            start()
-        }
-
-        // Animation pulse améliorée
-        textView.animate()
-            .scaleX(1.12f)
-            .scaleY(1.12f)
-            .alpha(0.9f)
-            .setDuration(100)
-            .withEndAction {
-                textView.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .alpha(1f)
-                    .setDuration(100)
-                    .setInterpolator(OvershootInterpolator(0.5f))
-                    .start()
-            }
-            .start()
-    }
-
-    private fun animateTextChange(textView: TextView, newText: String) {
-        textView.animate()
-            .scaleX(1.12f)
-            .scaleY(1.12f)
-            .alpha(0.9f)
-            .setDuration(100)
-            .withEndAction {
-                textView.text = newText
-                textView.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .alpha(1f)
-                    .setDuration(100)
-                    .setInterpolator(OvershootInterpolator(0.5f))
                     .start()
             }
             .start()
@@ -349,7 +311,7 @@ class CompteurFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     .scaleY(0.9f)
                     .setDuration(250)
                     .withEndAction {
-                        realisticSevenSegment.setValue(2.5, animate = false)
+                        sevenSegmentMoney.setValue(2.5, animate = false)
                         binding.cardFare.rotationY = -90f
                         binding.cardFare.animate()
                             .rotationY(0f)
